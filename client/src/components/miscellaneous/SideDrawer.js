@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import {BellIcon,ChevronDownIcon} from '@chakra-ui/icons'
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
 import { ChatState } from "../../Context/ChatProvider";
+import {Spinner} from "@chakra-ui/spinner"
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -14,8 +15,11 @@ import ChatLoading from "./ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
 function SideDrawer() {
   const toast = useToast()
+  const {user,setSelectedChat,chats,setChats} = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("");
+  
+
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
@@ -71,9 +75,22 @@ const config = {
   },
 }
  const {data} = await axios.post(`/api/chat`, {userId}, config)
+ console.log(data);
+ if(!chats.find((c)=> c._id === data._id)) setChats([data, ...chats])
 
+ setSelectedChat(data)
+setLoadingChat(false)
+onClose();
   }catch(err){
-
+    toast({
+      title: "Error Occured! ",
+      description: err.message,
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-left"
+    })
+    setLoadingChat(false)
   }
 
 }
@@ -83,7 +100,6 @@ const logoutHandler = () => {
   Navigate("/")
 }
 
-  const {user} = ChatState();
   return (
     <>
       <Box
@@ -155,6 +171,7 @@ searchResults?.map(user =>(
 ))
 )
 }
+{loadingChat && <Spinner ml="auto" d="flex" /> }
 </DrawerBody>
 </DrawerContent>
 
