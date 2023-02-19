@@ -76,4 +76,10 @@ socket.on('new message',(newMessageRecieved)=>{
     });
 })
 
+
+socket.off("setup",()=>{
+    console.log("user disconnected")
+    socket.leave(userData._id)
+})
+
 })
