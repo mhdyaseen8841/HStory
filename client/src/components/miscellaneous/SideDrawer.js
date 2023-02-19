@@ -3,6 +3,9 @@ import { Box, Tooltip, Button, Text, Menu, MenuButton, MenuList, MenuItem, MenuD
   DrawerHeader,
   DrawerOverlay,
   DrawerCloseButton,Input, useToast } from "@chakra-ui/react";
+  import NotificationBadge from 'react-notification-badge';
+import {Effect} from 'react-notification-badge';
+ 
 import React, { useState } from "react";
 import {BellIcon,ChevronDownIcon} from '@chakra-ui/icons'
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
@@ -13,9 +16,10 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import ChatLoading from "./ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
+import { getSender } from "../../config/ChatLogics";
 function SideDrawer() {
   const toast = useToast()
-  const {user,setSelectedChat,chats,setChats} = ChatState();
+  const {user,setSelectedChat,chats,setChats,notifications,setNotifications} = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("");
   
@@ -125,9 +129,26 @@ const logoutHandler = () => {
         <div>
           <Menu>
 <MenuButton p={1}>
+  <NotificationBadge
+  count = {notifications.length}
+effect = {Effect.SCALE}
+>
+
+  </NotificationBadge>
 <BellIcon fontSize="2xl" m={1} />
 </MenuButton>
-<MenuList></MenuList>
+<MenuList pl={2}>
+  {!notifications.length && "No New Messages"}
+  {notifications.map((n) => (
+<MenuItem key={n._id} onClick={()=>{
+  setSelectedChat(n.chat)
+  setNotifications(notifications.filter((n)=> n.chat._id !== n.chat._id))
+}}>
+{n.chat.isGroupChat?`New Message in ${n.chat.chatName}`:`New Message from ${getSender(user,n.chat.users)}`}
+</MenuItem>
+  ))}
+    
+</MenuList>
           </Menu>
 
           <Menu>

@@ -33,7 +33,7 @@ const [loading,setLoading] = useState(false)
 const [isTyping,setIsTyping] = useState(false)
 const [socketConnected, setSocketConnected] = useState(false)
 const [newMessage, setNewMessage] = useState()
-const {user,selectedChat,setSelectedChat} = ChatState()
+const {user,selectedChat,setSelectedChat, notifications,setNotifications} = ChatState()
 
 
 useEffect(() => {
@@ -60,7 +60,8 @@ const fetchMessages = async () => {
         setMessage(data)
         setLoading(false)
         socket.emit('join chat',selectedChat._id);
-        console.log(data);
+        
+    
     }catch(err){
         toast({
             title: "Error Occured!",
@@ -87,7 +88,11 @@ useEffect(() => {
   
     socket.on("message recieved",(newMessageRecieved)=>{
  if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id){
-
+if(!notifications.includes(newMessageRecieved)){
+    setNotifications([...notifications,newMessageRecieved])
+   
+    setFetchAgain(!fetchAgain)
+}
  }else{
     setMessage([...messages,newMessageRecieved])
  }
@@ -102,7 +107,6 @@ const sendMessage = async (e) =>{
 if(e.key==="Enter" && newMessage){
     socket.emit('stop typing',selectedChat._id);
 
-    console.log("sending message")
 try{
     const config = {
         headers:{
@@ -117,7 +121,7 @@ try{
     },
     config  
       );
-      console.log(data);
+    
       setMessage([...messages,data])
 
 socket.emit('new message',data)
