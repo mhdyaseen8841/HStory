@@ -7,7 +7,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import ChatLoading from './ChatLoading';
 import { getSender } from '../../config/ChatLogics';
 import GroupChatModal from './GroupChatModal';
-function MyChats() {
+function MyChats({fetchAgain}) {
 
 const [loggedUser, setLoggedUser] = useState();
 
@@ -40,7 +40,7 @@ const fetchChats = async  () => {
 useEffect(() => {
   setLoggedUser(JSON.parse(localStorage.getItem('userInfo')))
   fetchChats()
-}, [])
+}, [fetchAgain])
 
 
   return (

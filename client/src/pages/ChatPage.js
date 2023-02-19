@@ -13,7 +13,7 @@ function ChatPage() {
     const Navigate = useNavigate();
     const {user} = ChatState()
     const [chats, setChat] = useState([])
-
+const [fetchAgain, setFetchAgain] = useState(false)
 useEffect(() => {
 
  if(!user){
@@ -35,8 +35,8 @@ w='100%'
 h='91.5vh'
 p='10px'
 >
-    {user && <MyChats/>}
-    {user && <ChatBox/>}
+    {user && <MyChats fetchAgain={fetchAgain} />}
+    {user && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
 </Box>
     </div>
   )
