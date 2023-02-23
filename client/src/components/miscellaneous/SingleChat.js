@@ -90,7 +90,8 @@ useEffect(() => {
  if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id){
 if(!notifications.includes(newMessageRecieved)){
     setNotifications([...notifications,newMessageRecieved])
-   
+    console.log(newMessageRecieved)
+    console.log(notifications);
     setFetchAgain(!fetchAgain)
 }
  }else{
