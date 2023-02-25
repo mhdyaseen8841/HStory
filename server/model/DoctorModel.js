@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 
 const doctorSchema = mongoose.Schema({
     DocName:{type:String,required:true},
@@ -7,27 +8,35 @@ const doctorSchema = mongoose.Schema({
     gender:{type:String,required:true},
     Hospital:{type:String,required:true},
     Speciality:{type:String,required:true},
-    education:[{
-      type:mongoose.Schema.Types.ObjectId,
+    Education:[{
       degree:{type:String,required:true},
       year:{type:String,required:true},
+      college:{type:String,required:true},
   },],
+  Experience:{type:String,required:true},
     HospitalAddress:{type:String,required:true},
     DocAddress:{type:String,required:true},
     City:{type:String,required:true},
     State:{type:String,required:true},
-    zip:{type:String,required:true},
-    password:{type:String,required:true},
+    Zip:{type:String,required:true},
+    Password:{type:String,required:true},
+    RegistrationNo:{type:String,required:true},
+    RegistrationCouncil:{type:String,required:true},
+    RegYear:{type:String,required:true},
     pic: {
         type: "String",
         required: true,
         default:
           "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
       },   
-      Sign: {
+      MedicalProof: {
         type: "String",
         required: true,
-      },   
+      }, 
+      IdentityProof: {
+        type: "String",
+        required: true,
+      }, 
     },
     { timestaps: true }
   );
@@ -52,12 +61,11 @@ const doctorSchema = mongoose.Schema({
       console.log(user.password);
     });
   
-  if (!mongoose.models.User) {
-    const Doctor = mongoose.model("User", doctorSchema);
+  if (!mongoose.models.Doctor) {
+    const Doctor = mongoose.model("Doctor", doctorSchema);
   }
 
 
-module.exports=Doctor
 
 
-
+module.exports = mongoose.models.Doctor;
