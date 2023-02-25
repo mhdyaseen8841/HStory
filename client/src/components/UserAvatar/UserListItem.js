@@ -29,10 +29,14 @@ const UserListItem = ({ user, handleFunction }) => {
         src={user.pic}
       />
       <Box>
-        <Text>{user.name}</Text>
+        <Text> DR. {user.DocName}</Text>
         <Text fontSize="xs">
-          <b>Email : </b>
-          {user.email}
+          <b>Specialised : </b>
+         {user.Speciality}
+        </Text>
+        <Text fontSize="xs">
+          <b>Hospital : </b>
+          {user.Hospital}
         </Text>
       </Box>
     </Box>

@@ -47,11 +47,11 @@ try{
 setLoading(true)
 
 const config = {
-  headers: {
-    Authorization: `Bearer ${user.token}`,
-  },
+  // headers: {
+  //   Authorization: `Bearer ${user.token}`,
+  // },
 }
-  const {data} = await axios.get(`/api/user?search=${search}`, config)
+  const {data} = await axios.get(`/api/doctor?search=${search}`)
 
   setLoading(false)
   setSearchResults(data)

@@ -126,7 +126,7 @@ const searchDoc = asyncHandler(async (req, res) => {
         ],
     }:{};
 
-    const doctors = await Doctor.find(keyword).find({ _id: { $ne: req.user._id } })
+    const doctors = await Doctor.find(keyword)
     
     res.send(doctors)
     
