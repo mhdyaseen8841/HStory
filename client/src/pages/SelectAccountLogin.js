@@ -3,9 +3,12 @@ import React,{useEffect,useState} from 'react'
 import { Avatar } from "@chakra-ui/avatar";
 import axios from 'axios'
 import ChatLoading from "../components/miscellaneous/ChatLoading";
+import { Navbar } from "../components/miscellaneous/Navbar";
+import { useNavigate } from 'react-router-dom';
 function SelectAccountLogin() {
    
     const toast = useToast()
+    const Navigate = useNavigate();
 
 
     const [search, setSearch] = useState("");
@@ -52,9 +55,15 @@ function SelectAccountLogin() {
           }
   
   return (
+<>
 
-    <Container maxW='xl' centerContent>
+    <Container
+    display="flex"
+   
+    maxW='xl' centerContent>
+        
 <Box
+ 
 display='flex'
 justifyContent='center'
 p={3}
@@ -64,7 +73,8 @@ m="40px 0 15px 0"
 borderRadius="lg"
 borderWidth="1px"
 >
-    <Text fontSize='4xl' fontFamily='work sans' color='black'>
+    
+    <Text fontSize='4xl' fontFamily='work sans' color='black' cursor={'pointer'} onClick={()=> Navigate("/")}>
 HStory
     </Text>
     
@@ -154,6 +164,7 @@ searchResults?.map(user =>(
 </>
 }
 </Container>
+</>
   )
 }
 
