@@ -62,32 +62,44 @@ const authUser = asyncHandler(async (req, res) => {
     const objectId = ObjectId(id);
     
     if(password){
-        console.log(objectId);
-        const user = await User.findOne({ _id: new ObjectId(id) })
         
-        if(user&& (await user.matchPassword(password))){
-            res.json({
-                _id:user._id,
-                name:user.name,
-                email:user.email,
-                pic:user.pic,
-                token:generateToken(user._id)
-            })
-        }else{
-            res.status(401)
-            throw new Error('Invalid email or password')
-        }   
+        try{
+            const user = await User.findOne({ _id: new ObjectId(id) })
+        
+            if(user&& (await user.matchPassword(password))){
+                res.json({
+                    _id:user._id,
+                    name:user.name,
+                    email:user.email,
+                    pic:user.pic,
+                    token:generateToken(user._id)
+                })
+            }else{
+                res.status(401)
+                throw new Error('Invalid email or password')
+            }  
+
+        }catch(err){
+            console.log(err);
+        }
+        
     }else{
         console.log(objectId);
-        const user = await User.findOne({objectId})
-        console.log(user);
-        if(user){
-            otp = Math.floor(100000 + Math.random() * 900000);
-            res.json({otp})
-        }else{
-            res.status(401)
-            throw new Error('Invalid user')
+
+        try{
+            const user = await User.findOne({ _id: new ObjectId(id) })
+            console.log(user);
+            if(user){
+                otp = Math.floor(100000 + Math.random() * 900000);
+                res.json({otp})
+            }else{
+                res.status(401)
+                throw new Error('Invalid user')
+            }
+        } catch(err){
+            console.log(err);
         }
+      
 
          
         
@@ -97,10 +109,11 @@ const authUser = asyncHandler(async (req, res) => {
 })
 
 const otpValidate = asyncHandler(async (req, res) => {
-    const { mobnum, otplocal, id } = req.body;
-    const user = await User.findOne({id})
-
+    const {  otplocal, id } = req.body;
+    const objectId = ObjectId(id);
+    const user = await User.findOne({ _id: new ObjectId(id) })
     if(user){
+        console.log(otplocal,otp);
         if(otplocal==otp){
             res.json({
                 _id:user._id,
