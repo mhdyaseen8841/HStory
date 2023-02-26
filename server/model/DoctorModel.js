@@ -19,7 +19,7 @@ const doctorSchema = mongoose.Schema({
     City:{type:String,required:true},
     State:{type:String,required:true},
     Zip:{type:String,required:true},
-    Password:{type:String,required:true},
+    password:{type:String,required:true},
     RegistrationNo:{type:String,required:true},
     RegistrationCouncil:{type:String,required:true},
     RegYear:{type:String,required:true},
@@ -42,6 +42,7 @@ const doctorSchema = mongoose.Schema({
   );
 
   doctorSchema.methods.matchPassword = async function (enteredPassword) {
+    console.log(this.password);
     return await bcrypt.compare(enteredPassword,this.password)  
     }
 

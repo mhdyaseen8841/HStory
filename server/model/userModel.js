@@ -2,8 +2,19 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const userSchema = mongoose.Schema({
     name:{type:String,required:true},
-    email:{type:String, required:true,unique:true},
+    email:{type:String},
+    mobno:{type:String, required:true, unique: false},
+    gender:{type:String,required:true},
     password:{type:String,required:true},
+    address:{type:String,required:true},
+    city:{type:String,required:true},
+    district:{type:String,required:true},
+    state:{type:String,required:true},
+    zip:{type:String,required:true},
+proof:{
+    type: "String",
+    required: true,
+},
     pic: {
         type: "String",
         required: true,

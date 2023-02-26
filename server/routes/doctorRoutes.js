@@ -3,15 +3,15 @@ const router = express.Router()
 const  {registerDoctor,authDoctor,searchDoc,getspecialization,addspecialization,getDoctorBasedOnSpeciality,getAlldoctors} = require('../controllers/doctorControllers.js')
 const protect = require('../middleware/authMiddleware.js')
 
-router.route('/').post(registerDoctor).get(searchDoc);
+router.route('/').post(registerDoctor).get(protect,searchDoc);
 
 router.post('/login',authDoctor)
 
-router.route('/specialization').get(getspecialization).post(addspecialization)
+router.route('/specialization').get(protect,getspecialization).post(protect,addspecialization)
 
-router.route('/searchDoc').get(getDoctorBasedOnSpeciality)
+router.route('/searchDoc').get(protect,getDoctorBasedOnSpeciality)
 
-router.route('/getAlldoc').get(getAlldoctors)
+router.route('/getAlldoc').get(protect,getAlldoctors)
 
 
 module.exports = router

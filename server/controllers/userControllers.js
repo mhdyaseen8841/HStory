@@ -1,11 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../model/UserModel");
 const generateToken = require("../config/generateToken");
+const { ObjectId } = require('mongodb');
+const { log } = require("console");
 
-
+let otp=0;
 const registerUser =asyncHandler(async(req,res)=>{
-const {name,email,password,pic} = req.body;
-
+const {name,email,password,pic,mobno,address,city,state,zip,district,gender,proof} = req.body;
 if(!name || !email || !password){
     res.status(400)
     throw new Error('Please enter all fields')
@@ -19,7 +20,15 @@ const user = await User.create({
     name,
     email,
     password,
-    pic
+    pic,
+    mobno,
+    address,
+    city,
+    district,
+    state,
+    zip,
+    proof,
+    gender
 })
 
 if(user){
@@ -28,8 +37,9 @@ if(user){
         name:user.name,
         email:user.email,
         pic:user.pic,
+        mobno:user.mobno,
+        gender:user.gender,
         token:generateToken(user._id)
-    
     })
 }else{
     res.status(400)
@@ -37,20 +47,73 @@ if(user){
 }
 })
 
+const findUserAcc = asyncHandler(async (req, res) => {
+    const { mobnum } = req.body;
+
+    const user = await User.find({mobnum})
+   
+        res.json({user})
+     
+})
 
 
 const authUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { id, password } = req.body;
+    const objectId = ObjectId(id);
+    
+    if(password){
+        console.log(objectId);
+        const user = await User.findOne({ _id: new ObjectId(id) })
+        
+        if(user&& (await user.matchPassword(password))){
+            res.json({
+                _id:user._id,
+                name:user.name,
+                email:user.email,
+                pic:user.pic,
+                token:generateToken(user._id)
+            })
+        }else{
+            res.status(401)
+            throw new Error('Invalid email or password')
+        }   
+    }else{
+        console.log(objectId);
+        const user = await User.findOne({objectId})
+        console.log(user);
+        if(user){
+            otp = Math.floor(100000 + Math.random() * 900000);
+            res.json({otp})
+        }else{
+            res.status(401)
+            throw new Error('Invalid user')
+        }
 
-    const user = await User.findOne({email})
-    if(user&& (await user.matchPassword(password))){
-        res.json({
-            _id:user._id,
-            name:user.name,
-            email:user.email,
-            pic:user.pic,
-            token:generateToken(user._id)
-        })
+         
+        
+    }
+
+   
+})
+
+const otpValidate = asyncHandler(async (req, res) => {
+    const { mobnum, otplocal, id } = req.body;
+    const user = await User.findOne({id})
+
+    if(user){
+        if(otplocal==otp){
+            res.json({
+                _id:user._id,
+                name:user.name,
+                email:user.email,
+                pic:user.pic,
+                token:generateToken(user._id)
+            })
+        }else{
+            res.status(401)
+            throw new Error('Invalid otp')
+        }
+
     }else{
         res.status(401)
         throw new Error('Invalid email or password')
@@ -65,7 +128,7 @@ const allUsers = asyncHandler(async (req, res) => {
     const keyword = req.query.search ? {   
         $or: [
             { name: { $regex: req.query.search, $options: 'i' } },
-            { email: { $regex: req.query.search, $options: 'i' } },
+            { mobno: { $regex: req.query.search, $options: 'i' } },
         ],
     }:{};
 
@@ -76,4 +139,4 @@ const allUsers = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = {registerUser,authUser,allUsers};
+module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate};
