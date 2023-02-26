@@ -4,7 +4,8 @@
   .App{
     min-height: 100vh;
     display: flex;
-    background-image: url('./background.png');
+    background-color: #85ccc3;
+ 
     background-size: cover;
     background-position:center ;
     color:black
