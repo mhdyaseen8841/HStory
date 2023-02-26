@@ -2,47 +2,69 @@
 const Chat = require('../model/chatModel')
 const asyncHandler = require('express-async-handler')
 const User = require("../model/UserModel");
-
+const Doctor = require("../model/DoctorModel");
+const { ObjectId } = require('mongodb');
 
 const accessChat = asyncHandler(async (req, res) => {
 
-    const {userId}=req.body;
+    const {doctorId}=req.body;
 
-    if(!userId){
+    if(!doctorId){
         res.status(400)
-        throw new Error('UserId params not sent with request')
+        throw new Error('doctorId params not sent with request')
     }
     
     var isChat = await Chat.find({
         $and:[
-            {users:{$elemMatch:{$eq:req.user._id}}}
-            ,{users:{$elemMatch:{$eq:userId}}}
-        ]}).populate("users","-password").populate("latestMessage")
+            {user:{$eq:req.user._id}}
+            ,{doctor:{$eq:doctorId}}
+        ]}).populate("user","-password").populate("latestMessage").populate("doctor","-password")
 
 isChat= await User.populate(isChat,{
     path:"latestMessage.sender",
     select:"name pic email"
 })
+
 if(isChat.length > 0){
     console.log("ehhehhehe");
     console.log(isChat[0])
     res.send(isChat[0])
 }else{
+    
 console.log("uhuhughug");
-    var chatData={
-        chatName: "sender",
-        users: [req.user._id,userId]
-    }
 
-    try{
-        const createdChat = await Chat.create(chatData)
-        const Fullchat = await Chat.findOne({_id:createdChat._id}).populate("users","-password")
-        res.status(200).send(Fullchat)
-    }catch(error){
-        console.log(error);
-        res.status(400)
-        throw new Error(error.message)
-    }
+const objectId = ObjectId(doctorId);
+
+        const doctor = await Doctor.findOne({ _id: new ObjectId(doctorId) })
+        if(doctor){
+
+            var chatData={
+                chatName: "sender",
+                user: [req.user._id],
+                doctor:doctorId
+            }
+
+            try{
+                const createdChat = await Chat.create(chatData)
+                const Fullchat = await Chat.findOne({_id:createdChat._id}).populate("user","-password").populate("doctor","-password")
+                res.status(200).send(Fullchat)
+            }catch(error){
+                console.log(error);
+                res.status(400)
+                throw new Error(error.message)
+            }
+
+
+        }else{
+            errmsg="doctor not found"
+            res.status(400)
+                throw new Error(errmsg)
+        }
+  
+
+
+
+
 }
 })
 

@@ -8,7 +8,6 @@ const sendMessage = asyncHandler(async (req, res) => {
     if(!content || !chatId){
         console.log("No content or chatId");
         return res.status(400)
-       
     }
 
     var newMessage = {
@@ -45,11 +44,13 @@ res.json(message)
 
 const allMessages = asyncHandler(async (req, res) => {
 try{
+    console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
     const messages = await Message.find({chat:req.params.chatId}).populate("sender", "name pic email").populate("chat");
     res.json(messages)
 
 }catch(err) {
     res.status(400)
+    console.log(err.message);
     throw new Error(err.message)
 }
 })
