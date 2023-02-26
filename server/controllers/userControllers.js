@@ -75,7 +75,7 @@ const authUser = asyncHandler(async (req, res) => {
                     token:generateToken(user._id)
                 })
             }else{
-                res.status(401)
+                res.status(401).json({ message: 'Invalid email or password' });
                 throw new Error('Invalid email or password')
             }  
 
@@ -88,9 +88,21 @@ const authUser = asyncHandler(async (req, res) => {
 
         try{
             const user = await User.findOne({ _id: new ObjectId(id) })
+            
             console.log(user);
+           
             if(user){
+                //get mobnum
+                mobnum=user.mobno;
+           
+
                 otp = Math.floor(100000 + Math.random() * 900000);
+                 //send otp to mobile
+            //
+            //
+            //
+
+            //send otp to client
                 res.json({otp})
             }else{
                 res.status(401)

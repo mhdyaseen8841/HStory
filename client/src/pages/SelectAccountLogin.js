@@ -108,7 +108,7 @@ borderWidth="1px"
 <ChatLoading/>
 ):(
     searchResults.length === 0 ? (
-        <Text>No users found</Text>
+        <Text>No user found</Text>
       ) : (
 searchResults?.map(user =>(
 
@@ -132,6 +132,7 @@ searchResults?.map(user =>(
       mt={1}
       mb={1}
       borderRadius="lg"
+      onClick={()=> Navigate('/login',{state:{userId:user._id,userName:user.name,mobno:user.mobno}})}
     >
       <Avatar
         mr={2}

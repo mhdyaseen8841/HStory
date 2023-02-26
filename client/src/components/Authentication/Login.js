@@ -1,23 +1,35 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Stack, HStack, VStack, FormControl, FormLabel, Input, InputGroup, InputRightElement,Button,useToast } from '@chakra-ui/react'
 import axios from 'axios'
-function Login() {
+function Login(props) {
 
   const Navigate = useNavigate();
   const toast = useToast()
     const [email, setEmail] = useState();
- 
-    const [password, setPassword] = useState();
+    const [userName, setuserName] = useState(props.userData.userName);
+
+    const [password, setPassword] = useState('');
     const [Show, setShow] = useState(false);
  const [loading,setLoading]=useState(false);
 
 
+ 
 const submitHandler =async (e) => {
       setLoading(true)
-      if(!email || !password){
+      if(!password){
         toast({
-          title: "Fill all the fields! ",
+          title: "Enter Password! ",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        })
+          setLoading(false)
+          return
+      }
+      if(!props.userData.userId){
+        toast({
+          title: "Some Error Occur! ",
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -27,6 +39,8 @@ const submitHandler =async (e) => {
       }
 
  try{
+  let id = props.userData.userId;
+  
   const config = {
     headers: {
         "Content-Type": "application/json",
@@ -34,7 +48,7 @@ const submitHandler =async (e) => {
  }
  const {data} =await axios.post(
     "/api/user/login",
-    {email,password},
+    {id,password},
     config
  )
  toast({
@@ -50,6 +64,8 @@ Navigate("/chats")
 
 }
 catch(err){
+  
+  console.log(err);
   toast({
     title: "Error Occured! ",
     description: err.response.data.message,
@@ -69,14 +85,14 @@ const handleClick = () => setShow(!Show);
     <VStack spacing='5px' color='black'>
       
 
-        <FormControl id='email' isRequired>
+        <FormControl id='email' >
             <FormLabel>
-Email
+User Name
             </FormLabel>
             <Input
-            placeholder='Enter Your Email'
-            onChange={(e)=>setEmail(e.target.value)}
-            value={email}
+           
+            disabled
+            value={userName}
             />
         </FormControl>
 
@@ -107,13 +123,11 @@ onChange={(e)=>setPassword(e.target.value)}/>
         <Button colorScheme="blue" width="100%" style={{marginTop:15}} onClick={submitHandler}  isLoading={loading}>
     Login
     </Button>
-    <Button colorScheme="red" width="100%" style={{marginTop:15}} onClick={()=>{
-        setEmail("guest@example.com");
-        setPassword("123456");
-    }}
-   >
-   Get Guest User Credentials
+    <Button colorScheme="red" width="100%" style={{marginTop:15}} onClick={()=>Navigate("/register")}>
+   
+  Dont Have an Account? Register
     </Button>
+    
 
     </VStack>
   )
