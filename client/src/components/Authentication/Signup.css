@@ -1,0 +1,4 @@
+.MyComponent {
+    display: block !important; /* override the display: flex styling */
+    /* additional styles for MyComponent */
+  }

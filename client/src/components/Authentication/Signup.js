@@ -1,194 +1,149 @@
-import React,{useState} from 'react'
-import { Stack, HStack, VStack, FormControl, FormLabel, Input,useToast, InputGroup, InputRightElement,Button } from '@chakra-ui/react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-function Signup() {
-    const toast = useToast()
-    const Navigate = useNavigate();
-    const [name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [confirmpassword, setConfirmpassword] = useState();
-    const [password, setPassword] = useState();
-    const [pic,setPic]=useState();
-    const [Show, setShow] = useState(false);
-  const [loading,setLoading]=useState(false);
-
-
-
-const submitHandler = async (e) => {
-    setLoading(true)
-    if(!name || !email || !password || !confirmpassword ){
-        toast({
-            title: "Fill all the fields! ",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          })
-          setLoading(false)
-          return
-    }
-    if(password!==confirmpassword){
-        toast({
-            title: "Passwords don't match! ",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          })
-          setLoading(false)
-          return
-    }
-    try{
-const config = {
-    headers: {
-        "Content-Type": "application/json",
-    },
-
-}
-const {data} = await axios.post("/api/user",{name,email,password,pic},config)
-toast({
-    title: "Registration Successful! ",
-    status: "success",
-    duration: 5000,
-    isClosable: true,
-  })
-  localStorage.setItem("userInfo",JSON.stringify(data))
-  setLoading(false)
-  Navigate("/chat")
-    }catch(err){
-        toast({
-            title: "Error Occured! ",
-            description: err.response.data.message,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          })
-          setLoading(false)
-          return
-    }
-}
-const postDetails = (pic) => {
-setLoading(true)
-if(pic===undefined){
- toast({
-                title: "Image Undefined",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-              })
-              setLoading(false)
-              return;
-    }
-    if(pic.type==="image/jpeg" || pic.type==="image/png"){
- const data = new FormData()
- data.append("file",pic) 
- data.append("upload_preset","chat-app")
- data.append("cloud_name","dmgqvkhtp")
-
-    fetch("https://api.cloudinary.com/v1_1/dmgqvkhtp/image/upload",{method:"post",body:data}).then((res)=>res.json()).then((data)=>{
-        setPic(data.url.toString());
-        console.log(pic);
-        setLoading(false)
-    }).catch((err)=>{
-        console.log(err)
-        setLoading(false)
-    })
-}else{
-    toast({
-        title: "Select an Image! ",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      })
-      setLoading(false)
-      return;
-}
-}
-
-
-const handleClick = () => setShow(!Show);
-  return (
-    <VStack spacing='5px' color='black'>
-    <FormControl id='first-name' isRequired>
-        <FormLabel>
-Name
-        </FormLabel>
-        <Input
-        placeholder='Enter Your Name'
-        onChange={(e)=>setName(e.target.value)}/>
-    </FormControl>
-
-    <FormControl id='email1' isRequired>
-        <FormLabel>
-Email
-        </FormLabel>
-        <Input
-        placeholder='Enter Your Email'
-        onChange={(e)=>setEmail(e.target.value)}/>
-    </FormControl>
-
-    <FormControl id='Spassword' isRequired>
-
-       
-        <FormLabel>
-Password
-        </FormLabel>
-        <InputGroup>
-        <Input
-        type={Show?"text":"password"}
-        placeholder='Enter Your Password'
-        onChange={(e)=>setPassword(e.target.value)}/>
-
-<InputRightElement width="4.5rem">
-<Button h="1.75rem" size="sm" onClick={handleClick}>
-{Show ? "Hide" : "Show"}
-</Button>
-</InputRightElement>
-       
-
-</InputGroup>
-    </FormControl>
-
-    <FormControl id='cpassword' isRequired>
-
-       
-        <FormLabel>
-Confirm Password
-        </FormLabel>
-        <InputGroup>
-        <Input
-        type={Show?"text":"password"}
-       
-        onChange={(e)=>setConfirmpassword(e.target.value)}/>
-
-<InputRightElement width="4.5rem">
-<Button h="1.75rem" size="sm" onClick={handleClick}>
-{Show ? "Hide" : "Show"}
-</Button>
-</InputRightElement>
-       
-
-</InputGroup>
-    </FormControl>
-
-
-    <FormControl id='pic' >
-        <FormLabel>
-Upload Your Profile Picture
-        </FormLabel>
-        <Input
-        type='file'
-        p={1}
-        accept='image/*'
-        onChange={(e)=>postDetails(e.target.files[0])}/>
+import {
+    Flex,
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    InputGroup,
+    HStack,
+    InputRightElement,
+    Stack,
+    Button,
+    Heading,
+    Text,
+    useColorModeValue,
+    Link,
+  } from '@chakra-ui/react';
+  import { useState } from 'react';
+  import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+  import './Signup.css';
+  export default function Signup() {
+    const [showPassword, setShowPassword] = useState(false);
   
-      
-    </FormControl>
-    <Button colorScheme="blue" width="100%" style={{marginTop:15}} onClick={submitHandler} isLoading={loading}>
-    SignUp
-    </Button>
-
-</VStack>
-  )
-}
-
-export default Signup
+    return (
+      <Flex className="MyComponent"
+        minH={'100vh'}
+        align={'center'}
+        justify={'center'}
+        bg={useColorModeValue('gray.50', 'gray.800')}>
+        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+          <Stack align={'center'}>
+            <Heading fontSize={'4xl'} textAlign={'center'}>
+              Hstory
+            </Heading>
+            <Text fontSize={'lg'} color={'gray.600'}>
+              Sign Up to the Health Story 
+            </Text>
+          </Stack>
+          <Box
+            rounded={'lg'}
+            bg={useColorModeValue('white', 'gray.700')}
+            boxShadow={'lg'}
+            p={8}>
+            <Stack spacing={4}>
+              <HStack>
+                <Box>
+                  <FormControl id="firstName" isRequired>
+                    <FormLabel>Name</FormLabel>
+                    <Input type="text" />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id="mobile">
+                    <FormLabel>Mobile</FormLabel>
+                    <Input type="text" />
+                  </FormControl>
+                </Box>
+              </HStack>
+              <HStack>
+                <Box>
+                  <FormControl id="email" isRequired>
+                    <FormLabel>email</FormLabel>
+                    <Input type="email" />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id="gender">
+                    <FormLabel>Gender</FormLabel>
+                    <Input type="text" />
+                  </FormControl>
+                </Box>
+              </HStack>
+              <FormControl id="email" isRequired>
+                <FormLabel>Address</FormLabel>
+                <Input type="email" />
+              </FormControl>
+              <HStack>
+                <Box>
+                  <FormControl id="email" isRequired>
+                    <FormLabel>District</FormLabel>
+                    <Input type="email" />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id="gender">
+                    <FormLabel>City</FormLabel>
+                    <Input type="text" />
+                  </FormControl>
+                </Box>
+              </HStack>
+              <HStack>
+                <Box>
+                  <FormControl id="email" isRequired>
+                    <FormLabel>State</FormLabel>
+                    <Input type="email" />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id="gender">
+                    <FormLabel>Pincode</FormLabel>
+                    <Input type="text" />
+                  </FormControl>
+                </Box>
+              </HStack>
+              <FormControl  isRequired>
+                    <FormLabel>Upload Valid ID Proof</FormLabel>
+                    </FormControl>
+                    <Button fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
+                Upload CV
+              </Button>
+                 
+             
+              <FormControl id="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
+                  <Input type={showPassword ? 'text' : 'password'} />
+                  <InputRightElement h={'full'}>
+                    <Button
+                      variant={'ghost'}
+                      onClick={() =>
+                        setShowPassword((showPassword) => !showPassword)
+                      }>
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <Stack spacing={10} pt={2}>
+                <Button
+                  loadingText="Submitting"
+                  size="lg"
+                  bg={'blue.400'}
+                  color={'white'}
+                  _hover={{
+                    bg: 'blue.500',
+                  }}>
+                  Sign up
+                </Button>
+              </Stack>
+              <Stack pt={6}>
+                <Text align={'center'}>
+                  Already a user? <Link color={'blue.400'}>Login</Link>
+                </Text>
+              </Stack>
+            </Stack>
+          </Box>
+        </Stack>
+      </Flex>
+    );
+  }

@@ -10,12 +10,14 @@ import Landing from "./pages/index";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import SelectAccountLogin from "./pages/SelectAccountLogin";
 import Loginpage from "./pages/Loginpage";
+import Signup from "./components/Authentication/Signup";
 function App() {
   return (
     <div className="App">
       <Routes>
       <Route path="/selectaccount" element={<SelectAccountLogin />} />
 <Route path="/login" element={<Loginpage />} />
+<Route path="/signup" element={<Signup />} />
         {/* <Route path="/login" element={<Homepage />} /> */}
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/" element={<Landing />} />
