@@ -154,23 +154,23 @@ const submitOTP = async () => {
 
       try{
         let id = props.userData.userId;
-        
+        let otplocal=otp;
         const config = {
           headers: {
               "Content-Type": "application/json",
           },
        }
        const {data} =await axios.post(
-          "/api/user/login",
-          {id,password},
+          "/api/user/otp",
+          {id,otplocal},
           config
        )
-       toast({
-        title: "Registration Successful! ",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      })
+      //  toast({
+      //   title: "Registration Successful! ",
+      //   status: "success",
+      //   duration: 5000,
+      //   isClosable: true,
+      // })
       localStorage.setItem("userInfo",JSON.stringify(data))
       setLoading(false)
       Navigate("/chats")
@@ -187,6 +187,7 @@ const submitOTP = async () => {
           duration: 5000,
           isClosable: true,
         })
+        
         setLoading(false)
         return
       }
@@ -238,10 +239,11 @@ Mobile Number
          </>)
         
         }
-       <Button colorScheme="blue" width="100%" style={{marginTop:15}} disabled={resendDisabled} onClick={sendOTP}  isLoading={loading}>
-    
-    {resendDisabled ? `Resend OTP in ${countdown} seconds` : 'Send OTP'}
-    </Button>
+
+    {
+      resendDisabled ?  <Button colorScheme="blue" width="100%" style={{marginTop:15}} disabled={true} isLoading={loading}> Resend OTP in {countdown} seconds  </Button> : <Button colorScheme="blue" width="100%" style={{marginTop:15}}  onClick={sendOTP}  isLoading={loading}> Send OTP </Button>
+        }
+   
 
 
         
