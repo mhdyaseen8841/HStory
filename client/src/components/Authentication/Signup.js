@@ -14,12 +14,26 @@ import {
     useColorModeValue,
     Link,
   } from '@chakra-ui/react';
+  import { useFileUpload } from "use-file-upload";
   import { useState } from 'react';
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
   import './Signup.css';
   export default function Signup() {
     const [showPassword, setShowPassword] = useState(false);
-  
+  const [name,setName]=useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [mobile,setMobile]=useState("");
+  const [gender,setGender]=useState("");
+  const [address,setAddress]=useState("");
+  const [District,setDistrict]=useState("");
+  const [State,setState]=useState("");
+  const [pincode,setPincode]=useState("");
+  const [city,setCity]=useState("");
+
+  const [file, selectFiles] = useFileUpload()
+
+
     return (
       <Flex className="MyComponent"
         minH={'100vh'}
@@ -69,19 +83,19 @@ import {
                   </FormControl>
                 </Box>
               </HStack>
-              <FormControl id="email" isRequired>
+              <FormControl id="address" isRequired>
                 <FormLabel>Address</FormLabel>
                 <Input type="email" />
               </FormControl>
               <HStack>
                 <Box>
-                  <FormControl id="email" isRequired>
+                  <FormControl id="district" isRequired>
                     <FormLabel>District</FormLabel>
                     <Input type="email" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="gender">
+                  <FormControl id="city">
                     <FormLabel>City</FormLabel>
                     <Input type="text" />
                   </FormControl>
@@ -89,13 +103,13 @@ import {
               </HStack>
               <HStack>
                 <Box>
-                  <FormControl id="email" isRequired>
+                  <FormControl id="state" isRequired>
                     <FormLabel>State</FormLabel>
                     <Input type="email" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="gender">
+                  <FormControl id="pincode">
                     <FormLabel>Pincode</FormLabel>
                     <Input type="text" />
                   </FormControl>
@@ -104,11 +118,23 @@ import {
               <FormControl  isRequired>
                     <FormLabel>Upload Valid ID Proof</FormLabel>
                     </FormControl>
-                    <Button fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
+                    <Button onClick={() =>
+          selectFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
+            console.log("Files Selected", { name, size, source, file });
+          })
+        } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
                 Upload CV
               </Button>
+             
+             {file?
+             <Text fontSize='sm'>File uploaded*</Text>
+                 
+             :
+             < ></>
                  
              
+            }
+              
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>

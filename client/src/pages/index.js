@@ -85,7 +85,7 @@ function Landing() {
     <PopoverHeader pt={4} fontWeight='bold' border='0'>Authentification</PopoverHeader>
     <PopoverBody >
     <ButtonGroup size='sm'>
-    <Button  colorScheme='blue' >Signup</Button>
+    <Button  colorScheme='blue' onClick={()=>Navigate('/signup')} >Signup</Button>
     <Button colorScheme='green' onClick={patientLogin} >Login</Button>
     </ButtonGroup>
     </PopoverBody>
