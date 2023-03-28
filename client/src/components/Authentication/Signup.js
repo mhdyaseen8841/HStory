@@ -123,7 +123,7 @@ import {
             console.log("Files Selected", { name, size, source, file });
           })
         } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
-                Upload CV
+                Upload Proof
               </Button>
              
              {file?
