@@ -25,6 +25,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/doctor', doctorRoutes);
 app.use('/api/chat',chatRoutes);
 app.use("/api/message",messageRoutes)
+app.use('/')
 
 app.use(notFound)
 app.use(errorHandler)

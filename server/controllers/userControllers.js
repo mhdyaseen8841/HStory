@@ -5,6 +5,8 @@ const { ObjectId } = require('mongodb');
 const { log } = require("console");
 
 let otp=0;
+
+
 const registerUser =asyncHandler(async(req,res)=>{
 const {name,email,password,pic,mobno,address,city,state,zip,district,gender,proof} = req.body;
 if(!name || !email || !password){

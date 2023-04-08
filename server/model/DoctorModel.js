@@ -36,6 +36,11 @@ const doctorSchema = mongoose.Schema({
         type: "String",
         required: true,
       }, 
+      status: {
+        type: "String",
+        required: true,
+        default:"pending"
+      },
       IdentityProof: {
         type: "String",
         required: true,

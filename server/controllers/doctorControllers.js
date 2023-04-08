@@ -123,6 +123,8 @@ const searchDoc = asyncHandler(async (req, res) => {
         $or: [
             { DocName: { $regex: req.query.search, $options: 'i' } },
             { DocEmail: { $regex: req.query.search, $options: 'i' } },
+          {Speciality: { $regex: req.query.search, $options: 'i' } }
+
         ],
     }:{};
 

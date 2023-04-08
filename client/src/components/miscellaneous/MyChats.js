@@ -64,15 +64,7 @@ useEffect(() => {
      justifyContent="space-between"
      alignItems="center">
 My Chats
-<GroupChatModal>
-<Button
-            display="flex"
-            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-            rightIcon={<AddIcon />}
-          >
-            New Group Chat
-          </Button>
-</GroupChatModal>
+
     </Box>
     
     <Box
@@ -101,7 +93,7 @@ My Chats
     key={chat._id}
     >
 <Text>
-  {!chat.isGroupChat ?getSender(loggedUser, chat.users):chat.chatName}
+  {chat.chatName}
 </Text>
 
     </Box>

@@ -47,15 +47,16 @@ try{
 setLoading(true)
 
 const config = {
-  // headers: {
-  //   Authorization: `Bearer ${user.token}`,
-  // },
+  headers: {
+    Authorization: `Bearer ${user.token}`,
+  },
 }
-  const {data} = await axios.get(`/api/doctor?search=${search}`)
+  const {data} = await axios.get(`/api/doctor?search=${search}`,config)
 
   setLoading(false)
   setSearchResults(data)
 }catch(error){
+  console.log(error)
   toast({
     title: "Error Occured! ",
     description: "Failed to search users! ",
