@@ -13,6 +13,8 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const prescriptionRoutes = require('./routes/prescriptionRoutes');
+const adminRoutes = require('./routes/adminRoutes')
 dotenv.config();
 
 connectDB();
@@ -21,12 +23,13 @@ connectDB();
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
+
 app.use('/api/user', userRoutes);
 app.use('/api/doctor', doctorRoutes);
 app.use('/api/chat',chatRoutes);
 app.use("/api/message",messageRoutes)
-app.use('/')
-
+app.use('/api/prescription',prescriptionRoutes)
+app.use('/api/admin',adminRoutes)
 app.use(notFound)
 app.use(errorHandler)
 

@@ -1,11 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const Doctor = require("../model/DoctorModel");
-const specialization = require("../model/specializationModel");
+
 const generateToken = require("../config/generateToken");
 
 const registerDoctor =asyncHandler(async(req,res)=>{
 
-    const {DocName,DocEmail,password,pic,MobNum,gender,Hospital,Speciality,education,HospitalAddress,DocAddress,City,State,zip,Sign} = req.body;
+    const {DocName,DocEmail,password,pic,MobNum,gender,Hospital,Speciality,education,HospitalAddress,DocAddress,City,IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,State,Zip,Sign} = req.body;
 
 if(!DocName || !DocEmail || !password){
     res.status(400)
@@ -28,9 +28,10 @@ const user = await Doctor.create({
     education,
     HospitalAddress,
     DocAddress,
+    IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,
     City,
     State,
-    zip,
+    Zip,
     Sign
 })
 
@@ -73,34 +74,10 @@ const authDoctor = asyncHandler(async (req, res) => {
 })
 
 
-const addspecialization = asyncHandler(async (req, res) => {
-const {specialised} = req.body;
-const spec = await specialization.create({
-    specialised
-})
-
-if(spec){
-    res.status(201).json({
-        _id:spec._id,
-        specialised:spec.specialised
-    })
-}else{
-    res.status(400)
-    throw new Error('Invalid Speciality')
-}
-
-})
-
-
-const getspecialization = asyncHandler(async (req, res) => {
-    const spec = await specialization.find({})
-    res.json(spec)
-})
-
 
 
 const getAlldoctors = asyncHandler(async (req, res) => {
-    const doctors = await Doctor.find({})
+    const doctors = await Doctor.find({ status: { $ne: 'pending' }})
     res.json(doctors)
 })
 
@@ -135,4 +112,4 @@ const searchDoc = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = {registerDoctor,authDoctor,searchDoc,addspecialization,getspecialization,getAlldoctors,getDoctorBasedOnSpeciality};
+module.exports = {registerDoctor,authDoctor,searchDoc,getAlldoctors,getDoctorBasedOnSpeciality};
