@@ -14,6 +14,8 @@ import Signup from "./components/Authentication/Signup";
 import UserLandingPage from "./pages/UserLandingPage";
 import Prescription from "./pages/Prescription";
 import DoctorLandingPage from "./pages/DoctorLandingPage";
+import DoctorRegister from "./pages/DoctorRegister"
+import DoctorLogin from "./pages/DoctorLogin";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
       <Route path="/selectaccount" element={<SelectAccountLogin />} />
 <Route path="/login" element={<Loginpage />} />
 <Route path="/signup" element={<Signup />} />
+<Route path="/doctorlogin" element={<DoctorLogin />} />
+<Route path="/doctorsignup" element={<DoctorRegister />} />
         {/* <Route path="/login" element={<Homepage />} /> */}
         <Route path="/userlanding" element={<UserLandingPage />} />
         <Route path="/doctorlanding" element={<DoctorLandingPage />} />

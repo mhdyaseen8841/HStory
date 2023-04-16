@@ -60,6 +60,8 @@ const authDoctor = asyncHandler(async (req, res) => {
 
     const user = await Doctor.findOne({DocEmail})
     if(user&& (await user.matchPassword(password))){
+     //add validation for status is accepted
+     if(user.status==="accepted"){
         res.json({
             _id:user._id,
             DocName:user.DocName,
@@ -67,7 +69,19 @@ const authDoctor = asyncHandler(async (req, res) => {
             pic:user.pic,
             token:generateToken(user._id)
         })
+     }else if(user.status==="pending"){
+        res.status(401)
+        throw new Error('Your Registration is pending')
+     }else if(user.status ==="blocked"){
+        res.status(401)
+        throw new Error('Blocked by admin contact admin for more details')
+     }else{
+        res.status(401)
+        throw new Error('Some Error occured try later')
+     }
+        
     }else{
+      
         res.status(401)
         throw new Error('Invalid email or password')
     }   

@@ -52,7 +52,7 @@ const submitHandler =async (e) => {
     config
  )
  toast({
-  title: "Registration Successful! ",
+  title: "Login Successful! ",
   status: "success",
   duration: 5000,
   isClosable: true,
