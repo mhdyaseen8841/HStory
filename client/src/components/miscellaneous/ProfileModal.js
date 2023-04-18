@@ -32,30 +32,40 @@ onClick={onOpen}
           fontFamily="work sans"
           display="flex"
           justifyContent="center"
-          >{user.name}</ModalHeader>
+          >{user.DocName}</ModalHeader>
           <ModalCloseButton />
           <ModalBody display="flex"
           flexDir="column"
           alignItems="center"
           justifyContent="space-between">
           <Image borderRadius="full"
-          boxSize="150px"
+          boxSize="100px"
           src={user.pic}
-          alt={user.name}
+          alt={user.DocName}
           />
           <Text
           fontSize={{base:"20px",md:"30px"}}
 fontFamily="work sans"
 >
-  Email: {user.email}
+  Email: {user.DocEmail}
+</Text>
+<Text
+          fontSize={{base:"20px",md:"30px"}}
+fontFamily="work sans"
+>
+  Mob: {user.MobNum}
+</Text>
+<Text
+          fontSize={{base:"20px",md:"30px"}}
+fontFamily="work sans"
+>
+  Specialization: {user.Speciality}
 </Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
+            
+            <Button colorScheme='blue' onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -25,6 +25,8 @@ const fetchChats = async  () => {
     }
     const {data} = await axios.get(`/api/chat`, config)
     setChats(data)
+    console.log("deeeeetaaaaaaaa")
+    console.log(data)
   }catch(error){
     toast({
       title: "Error Occured! ",
@@ -93,8 +95,10 @@ My Chats
     key={chat._id}
     >
 <Text>
-  {chat.chatName}
-</Text>
+                  {
+                    getSender(user, chat.users)
+                   }
+                </Text>
 
     </Box>
   

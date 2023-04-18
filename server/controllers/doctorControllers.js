@@ -67,6 +67,8 @@ const authDoctor = asyncHandler(async (req, res) => {
             _id:user._id,
             DocName:user.DocName,
             DocEmail:user.DocEmail,
+            Speciality:user.Speciality,
+            MobNum:user.MobNum,
             pic:user.pic,
             token:generateToken(user._id)
         })

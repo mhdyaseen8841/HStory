@@ -21,15 +21,15 @@ const Navbar = () => {
   }
   const ProfileModal = ({open,close})=>{
     return(
-        <Modal onClose={close} size="full" isOpen={open}>
+        <Modal onClose={close} size="full" isOpen={open} >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Profile</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody sx={{background:'#85ccc3'}}>
             <Profile/>
             </ModalBody>
-          <ModalFooter>
+          <ModalFooter sx={{background:'#85ccc3'}}>
             <Button onClick={close}>Close</Button>
           </ModalFooter>
         </ModalContent>

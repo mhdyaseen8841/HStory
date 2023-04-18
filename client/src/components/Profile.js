@@ -1,7 +1,7 @@
 import { Grid, GridItem, Flex, Box, Text,Avatar } from "@chakra-ui/react";
 import { Stack, HStack, VStack } from "@chakra-ui/react";
 const Profile = () => {
-  const bShadow = { boxShadow: "0 0 5px #555", borderRadius: 5 };
+  const bShadow = { boxShadow: "0 0 5px #888", borderRadius: 5,background:'#fff'};
   return (
     <Grid
       h="300px"

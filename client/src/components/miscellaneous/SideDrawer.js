@@ -79,7 +79,7 @@ const config = {
     Authorization: `Bearer ${user.token}`,
   },
 }
- const {data} = await axios.post(`/api/chat`, {userId}, config)
+ const {data} = await axios.post(`/api/chat`, {doctorId:userId}, config)
  console.log(data);
  if(!chats.find((c)=> c._id === data._id)) setChats([data, ...chats])
 
