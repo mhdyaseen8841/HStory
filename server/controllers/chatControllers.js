@@ -15,14 +15,15 @@ const accessChat = asyncHandler(async (req, res) => {
     }
     
     var isChat = await Chat.find({
-        $and:[
-            {user:{$eq:req.user._id}}
-            ,{doctor:{$eq:doctorId}}
-        ]}).populate("user","-password").populate("latestMessage").populate("doctor","-password")
+        $and: [
+            { users: { $elemMatch: { $eq: req.user._id } } },
+            { users: { $elemMatch: { $eq: doctorId } } },
+          ],
+    }).populate("users","-password").populate("latestMessage")
 
-isChat= await User.populate(isChat,{
+isChat= await Doctor.populate(isChat,{
     path:"latestMessage.sender",
-    select:"name pic email"
+    select:"DocName pic DocEmail"
 })
 
 if(isChat.length > 0){
@@ -40,15 +41,16 @@ const objectId = ObjectId(doctorId);
 
             var chatData={
                 chatName: "sender",
-                user: [req.user._id],
-                doctor:doctorId
+                users: [req.user._id, doctorId],
             }
+            
 
             try{
                 const createdChat = await Chat.create(chatData)
-                const Fullchat = await Chat.findOne({_id:createdChat._id}).populate("user","-password").populate("doctor","-password")
+                const Fullchat = await Chat.findOne({_id:createdChat._id})
                 res.status(200).send(Fullchat)
             }catch(error){
+                
                 console.log(error);
                 res.status(400)
                 throw new Error(error.message)
@@ -74,9 +76,9 @@ const fetchChats = asyncHandler(async (req, res) => {
 
     try{   
        Chat.find({users:{$elemMatch:{$eq:req.user._id}}}).populate("users","-password").populate("latestMessage").sort({updatedAt: -1}).then(async(result)=>{
-        result =await User.populate(result,{
+        result =await Doctor.populate(result,{
             path:"latestMessage.sender",
-            select:"name pic email"
+            select:"DocName pic email"
         })  
 res.status(200).send(result)
        }).catch((error)=>{

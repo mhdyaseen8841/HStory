@@ -14,9 +14,9 @@ const DoctorProvider = ({ children }) => {
 
 
     return (
-        <ChatContext.Provider value={{user,setUser, selectedChat, setSelectedChat,chats,setChats,notifications,setNotifications}}>
+        <DoctorContext.Provider value={{user,setUser, selectedChat, setSelectedChat,chats,setChats,notifications,setNotifications}}>
         {children}
-        </ChatContext.Provider>
+        </DoctorContext.Provider>
     );
    
 

@@ -3,6 +3,7 @@ import { Box, Button, Flex, Heading, Spacer, Text } from '@chakra-ui/react'
 import backgroundImage from '../images/DocImg.jpg'
 import { useNavigate } from 'react-router-dom'
 import { Avatar, AvatarBadge, AvatarGroup,Wrap,WrapItem } from '@chakra-ui/react'
+import Navbar from '../components/Navbar'
 
 const DoctorLandingPage = () => {
   const Navigate = useNavigate();
@@ -27,17 +28,7 @@ const  [docName, setDocName] = useState('')
   }, [])
   return (
     <Box>
-      <Flex alignItems='center' bg="#cccccc"  px={4} py={3}>
-        <Heading fontSize="40px"  >History </Heading>
-        <Spacer />
-        <Button mr={'4'} variant="solid" colorScheme="blue" onClick={prescriptionHandle}  >Prescription</Button>
-          <Button variant="solid" colorScheme="blue">Chat</Button>
-          <Wrap pl={2}>
-
-  <WrapItem>
-  <Avatar name={docName} src='https://bit.ly/broken-link' />  </WrapItem>
-</Wrap>
-      </Flex>
+      <Navbar/>
 
       <Box backgroundImage={`url(${backgroundImage})`} backgroundSize='cover' height='645px' >
   <Box backgroundColor='rgba(0, 0, 0, 0.5)'  px={48} height='100%' display='flex' alignItems='center' justifyContent='center'>

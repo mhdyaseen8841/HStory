@@ -9,12 +9,12 @@ const ChatProvider = ({ children }) => {
    const [chats, setChats] = useState([]);
    const [notifications, setNotifications] = useState([]);
    useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo')) 
+    const userInfo = JSON.parse(localStorage.getItem('DoctorInfo')) 
+    console.log(userInfo)
+    console.log("dsfjsdfjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
     console.log(userInfo)
     setUser(userInfo)
-    if(userInfo){
-      Navigate("/user")
-    }
+    
 
   
   }, [Navigate])

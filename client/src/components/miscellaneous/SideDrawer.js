@@ -1,4 +1,4 @@
-import { Box, Tooltip, Button, Text, Menu, MenuButton, MenuList, MenuItem, MenuDivider,Drawer, useDisclosure,Image, DrawerContent,DrawerBody,
+import { Box, Tooltip, Button,Stack, Text, Menu, MenuButton, MenuList, MenuItem, MenuDivider,Drawer, useDisclosure,Image, DrawerContent,DrawerBody,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
@@ -100,8 +100,9 @@ onClose();
 
 }
 
+
 const logoutHandler = () => {
-  localStorage.removeItem("userInfo");
+  localStorage.removeItem("DoctorInfo");
   Navigate("/")
 }
 
@@ -154,12 +155,16 @@ effect = {Effect.SCALE}
 
           <Menu>
 <MenuButton p={1} as={Button} rightIcon ={<ChevronDownIcon/>}>
-<Avatar size="sm" cursor="pointer" name={user.name} src={user.pic}/>
+<Avatar size="sm" cursor="pointer" name={user.DocName} src={user.pic}/>
 </MenuButton>
 <MenuList>
+  <Stack>
+  <Text>{user.DocName}</Text>
   <ProfileModal user={user}>
- 
   </ProfileModal>
+  </Stack>
+  
+ 
   <MenuDivider/>
   <MenuItem onClick={logoutHandler}>Logout</MenuItem>
 </MenuList>
