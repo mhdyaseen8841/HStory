@@ -12,7 +12,7 @@ function Loginpage() {
 useEffect(() => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
   if(userInfo){
-    Navigate("/chat")
+    Navigate("/user")
   }
 }, [])
 

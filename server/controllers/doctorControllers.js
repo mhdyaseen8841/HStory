@@ -2,11 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Doctor = require("../model/DoctorModel");
 
 const generateToken = require("../config/generateToken");
+let otp=0;
 
 const registerDoctor =asyncHandler(async(req,res)=>{
 
     const {DocName,DocEmail,password,pic,MobNum,gender,Hospital,Speciality,education,HospitalAddress,DocAddress,City,IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,State,Zip,Sign} = req.body;
-
+console.log(req.body)
 if(!DocName || !DocEmail || !password){
     res.status(400)
     throw new Error('Please enter all fields')
@@ -44,7 +45,7 @@ if(user){
         MobNum:user.MobNum,
         Speciality:user.Speciality,
 
-        token:generateToken(user._id)
+       
     
     })
 }else{
@@ -87,7 +88,31 @@ const authDoctor = asyncHandler(async (req, res) => {
     }   
 })
 
+const sendPatientOtp = asyncHandler(async (req, res) => {
+    console.log("hiiiiiiiiiiiiiiiiiiiiiiii")
+    const { mobnum } = req.body;
+    // sendotp(mobnum)
+    otp = Math.floor(100000 + Math.random() * 900000);
+    res.json({otp})
+    if(otp){
+        console.log("sendotp"+otp)
+        res.json({msg:"success"})
+    }else{
+        res.status(401)
+        throw new Error('error while sending otp')
+    }
+})
 
+const validatePatient = asyncHandler(async (req, res) => {
+    console.log("heyehyye")
+  
+    console.log(req.body.otp)
+    if(otp == req.body.otp){
+        res.json({msg:"success"})
+    }else{
+        res.status(401)
+        throw new Error('Invalid OTP')
+    }})
 
 
 const getAlldoctors = asyncHandler(async (req, res) => {
@@ -126,4 +151,4 @@ const searchDoc = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = {registerDoctor,authDoctor,searchDoc,getAlldoctors,getDoctorBasedOnSpeciality};
+module.exports = {registerDoctor,authDoctor,searchDoc,getAlldoctors,getDoctorBasedOnSpeciality,sendPatientOtp,validatePatient};

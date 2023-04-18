@@ -9,6 +9,7 @@ import ChatPage from "./pages/ChatPage";
 import Landing from "./pages/index";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import SelectAccountLogin from "./pages/SelectAccountLogin";
+import SelectPatient from "./pages/SelectPatient"
 import Loginpage from "./pages/Loginpage";
 import Signup from "./components/Authentication/Signup";
 import UserLandingPage from "./pages/UserLandingPage";
@@ -16,7 +17,7 @@ import Prescription from "./pages/Prescription";
 import DoctorLandingPage from "./pages/DoctorLandingPage";
 import DoctorRegister from "./pages/DoctorRegister"
 import DoctorLogin from "./pages/DoctorLogin";
-
+import DoctorPrescription from "./pages/DoctorPrescription";
 function App() {
   return (
     <div className="App">
@@ -24,11 +25,14 @@ function App() {
       <Route path="/selectaccount" element={<SelectAccountLogin />} />
 <Route path="/login" element={<Loginpage />} />
 <Route path="/signup" element={<Signup />} />
+
 <Route path="/doctorlogin" element={<DoctorLogin />} />
 <Route path="/doctorsignup" element={<DoctorRegister />} />
+<Route path="/doctor/selectpatient" element={<SelectPatient />} />
+<Route path="/doctor/prescription" element={<DoctorPrescription />} />
         {/* <Route path="/login" element={<Homepage />} /> */}
-        <Route path="/userlanding" element={<UserLandingPage />} />
-        <Route path="/doctorlanding" element={<DoctorLandingPage />} />
+        <Route path="/user" element={<UserLandingPage />} />
+        <Route path="/doctor" element={<DoctorLandingPage />} />
 
         <Route path="/prescription" element={<Prescription />} />
         <Route path="/chat" element={<ChatPage />} />

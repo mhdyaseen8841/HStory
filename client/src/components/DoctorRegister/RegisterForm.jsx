@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Progress,
   Box,
@@ -19,14 +19,72 @@ import {
   InputRightElement,
   Radio, RadioGroup,Stack,Text
 } from '@chakra-ui/react';
-
+import axios from 'axios'
 import { useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom'
+
 import { useFileUpload } from "use-file-upload";
-const Form1 = () => {
+const Form1 = (props) => {
+
+  const toast = useToast();
+
   const [show, setShow] = React.useState(false);
   const [file, selectFiles] = useFileUpload()
 
+
+ const [name,setName]=useState('')
+  const [mobile,setMobile]=useState('')
+  const [email,setEmail]=useState('')
+    const [address,setAddress]=useState('')
+    const [gender,setGender]=useState('')
+    const [city,setCity]=useState('')
+    const [state,setState]=useState('')
+    const [zip,setZip]=useState('')
+  const [password,setPassword]=useState('')
+
   const handleClick = () => setShow(!show);
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if(name===''||mobile===''||email===''||address===''||gender===''||city===''||state===''||zip===''||password===''){
+    toast({
+      title: "Please fill all the fields! ",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    })
+    return
+  }
+  if(!file){
+    toast({
+      title: "Please upload your picture! ",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    })
+    return
+  }
+ let data={
+  DocName:name,
+  MobNum:mobile,
+  DocEmail:email,
+  DocAddress:address,
+    gender:gender,
+    City:city,
+    State:state,
+    Zip:zip,
+    password:password,
+    pic:file.source
+ }
+ 
+   props.setData(data)
+    props.nextStep();
+  };
+
+  function handleGenderChange(value) {
+    setGender(value);
+  }
+
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
@@ -35,16 +93,21 @@ const Form1 = () => {
       <Flex>
         <FormControl mr="5%">
           <FormLabel htmlFor="name" fontWeight={'normal'}>
-            name
+            Name
           </FormLabel>
-          <Input id="name" placeholder="First name" />
+          <Input id="name" placeholder="Full name" 
+         value={name}
+           onChange={(e)=>setName(e.target.value)}/>
         </FormControl>
 
         <FormControl>
           <FormLabel htmlFor="mobile" fontWeight={'normal'}>
           Mobile no
           </FormLabel>
-          <Input id="mobile" placeholder="mobile no" />
+          <Input id="mobile"
+          value={mobile}
+            onChange={(e)=>setMobile(e.target.value)}
+          placeholder="mobile no" />
         </FormControl>
       </Flex>
     
@@ -53,7 +116,10 @@ const Form1 = () => {
         <FormLabel htmlFor="email" fontWeight={'normal'}>
           Email address
         </FormLabel>
-        <Input id="email" type="email" />
+        <Input id="email" type="email" 
+        value={email}
+        onChange={(e)=>setEmail(e.target.value)}
+        />
         <FormHelperText>We'll never share your email.</FormHelperText>
       </FormControl>
 
@@ -62,11 +128,12 @@ const Form1 = () => {
       <FormLabel htmlFor="email" pt={3} fontWeight={'normal'}>
          Gender
         </FormLabel>
-      <RadioGroup>
+      <RadioGroup id="gender" value={gender} onChange={handleGenderChange} 
+      >
       <Stack direction='row'>
-        <Radio value='1'>Male</Radio>
-        <Radio value='2'>Female</Radio>
-        <Radio value='3'>Other</Radio>
+        <Radio value='male'>Male</Radio>
+        <Radio value='female'>Female</Radio>
+        <Radio value='other'>Other</Radio>
       </Stack>
     </RadioGroup>
     </FormControl>
@@ -76,14 +143,14 @@ const Form1 = () => {
           <FormLabel htmlFor="address" fontWeight={'normal'}>
             Address
           </FormLabel>
-          <Input id="address" placeholder="Address" />
+          <Input id="address" value={address} onChange={(e)=>setAddress(e.target.value)} placeholder="Address" />
         </FormControl>
 
         <FormControl>
           <FormLabel htmlFor="city" fontWeight={'normal'}>
           City
           </FormLabel>
-          <Input id="city" placeholder="city" />
+          <Input id="city"  value={city} onChange={(e)=>setCity(e.target.value)}  placeholder="city" />
         </FormControl>
       </Flex>
       
@@ -92,25 +159,25 @@ const Form1 = () => {
           <FormLabel htmlFor="state" fontWeight={'normal'}>
             State
           </FormLabel>
-          <Input id="state" placeholder="State" />
+          <Input id="state"  value={state} onChange={(e)=>setState(e.target.value)}  placeholder="State" />
         </FormControl>
 
         <FormControl>
           <FormLabel htmlFor="zip" fontWeight={'normal'}>
           Zip Code
           </FormLabel>
-          <Input id="zip" placeholder="Zip Code" />
+          <Input id="zip"  value={zip} onChange={(e)=>setZip(e.target.value)}  placeholder="Zip Code" />
         </FormControl>
       </Flex>
       <FormControl  isRequired>
-                    <FormLabel>Upload Valid ID Proof</FormLabel>
+                    <FormLabel>Upload Image</FormLabel>
                     </FormControl>
                     <Button onClick={() =>
           selectFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
             console.log("Files Selected", { name, size, source, file });
           })
         } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'} >
-                Upload Proof
+                Upload Image
               </Button>
              
              {file?
@@ -131,6 +198,7 @@ const Form1 = () => {
             pr="4.5rem"
             type={show ? 'text' : 'password'}
             placeholder="Enter password"
+            value={password} onChange={(e)=>setPassword(e.target.value)} 
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -139,13 +207,80 @@ const Form1 = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-     
+      <Flex>
+              <Button
+                onClick={() => {
+                 
+                }}
+                isDisabled={true}
+                colorScheme="teal"
+                variant="solid"
+                w="7rem"
+                mr="5%">
+                Back
+              </Button>
+              <Button
+                w="7rem"
+                onClick={handleSubmit}
+                colorScheme="teal"
+                variant="outline">
+                Next
+              </Button>
+            </Flex>
     </>
   );
 };
 
-const Form2 = () => {
+const Form2 = (props) => {
+
   const arr=["eyes","lungs","ear","heart"]
+
+  const toast = useToast();
+
+
+ const [college,setCollege]=useState('')
+  const [passout,setPassout]=useState('')
+  const [cHospital,setCHospital]=useState('')
+  const [hAddress,setHAddress]=useState('')
+  
+const [speciality,setSpeciality]=useState('')
+const [experience,setExperience]=useState('')
+  const handleSubmit = () => {
+
+    if(!college || !passout || !cHospital || !hAddress ||  !speciality || !experience){
+      
+      toast({
+        title: "Please fill all the fields",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+
+      return
+    }
+let education=[
+  {
+    college:college,
+    year:passout
+  }
+]
+   let data={
+      education:education,
+     
+      Hospital:cHospital,
+      HospitalAddress:hAddress,
+      Speciality:speciality,
+      Experience:experience
+    }
+
+    props.setData(data)
+    props.nextStep();
+  };
+
+  const handleBack =()=>{
+    props.backStep()
+  }
+
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
@@ -173,6 +308,7 @@ const Form2 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={college} onChange={(e)=>setCollege(e.target.value)}
         />
       </FormControl>
 
@@ -198,6 +334,7 @@ const Form2 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={passout} onChange={(e)=>setPassout(e.target.value)}
         />
       </FormControl>
 
@@ -223,6 +360,7 @@ const Form2 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={cHospital} onChange={(e)=>setCHospital(e.target.value)}
         />
       </FormControl>
 
@@ -248,6 +386,7 @@ const Form2 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={hAddress} onChange={(e)=>setHAddress(e.target.value)}
         />
       </FormControl>
 
@@ -271,7 +410,9 @@ const Form2 = () => {
           shadow="sm"
           size="sm"
           w="full"
-          rounded="md">
+          rounded="md"
+          value={speciality} onChange={(e)=>setSpeciality(e.target.value)}
+          >
             {arr.map((value, index) => {
     return <option key={index} value={value}>{value}</option>
   })}
@@ -289,19 +430,73 @@ const Form2 = () => {
           mt="2%">
          Total Experience
           </FormLabel>
-          <Input id="experience" placeholder="Total Experience" />
+          <Input id="experience" placeholder="Total Experience"
+          value={experience} onChange={(e)=>setExperience(e.target.value)}
+          />
         </FormControl>
       </Flex>
+      <Flex>
+              <Button
+                onClick={handleBack}
+                colorScheme="teal"
+                variant="solid"
+                w="7rem"
+                mr="5%">
+                Back
+              </Button>
+              <Button
+                w="7rem"
+                onClick={handleSubmit}
+                colorScheme="teal"
+                variant="outline">
+                Next
+              </Button>
+            </Flex>
 
      
     </>
   );
 };
 
-const Form3 = () => {
+const Form3 = (props) => {
+  const toast = useToast()
   const [iFile, selectIFiles] = useFileUpload()
 
   const [mFile, selectMFiles] = useFileUpload()
+
+
+const [rCouncil, setRCouncil] = useState('')
+const [rNumber, setRNumber] = useState('')
+const [rYear, setRYear] = useState('')
+
+  const handleBack =()=>{
+    props.backStep()
+  }
+
+  const submitForm = () => {
+if(!iFile || !mFile || rCouncil==='' || rNumber==='' || rYear===''){
+  toast({
+    title: "Please fill all the fields",
+
+    status: "error",
+    duration: 9000,
+    isClosable: true,
+  })
+}else{
+  console.log("esetttttt")
+
+  let data={
+    RegistrationCouncil:rCouncil,
+    RegistrationNo:rNumber,
+    RegYear:rYear,
+    IdentityProof:iFile.source,
+    MedicalProof:mFile.source
+
+  }
+props.setData(data)
+    props.handleSubmit()
+}
+  }
 
   return (
     <>
@@ -332,6 +527,7 @@ const Form3 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={rCouncil} onChange={(e)=>setRCouncil(e.target.value)}
         />
       </FormControl>
 
@@ -357,6 +553,7 @@ const Form3 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={rNumber} onChange={(e)=>setRNumber(e.target.value)}
         />
       </FormControl>
 
@@ -382,57 +579,191 @@ const Form3 = () => {
           size="sm"
           w="full"
           rounded="md"
+          value={rYear} onChange={(e)=>setRYear(e.target.value)}
         />
       </FormControl>
 
       <FormControl  isRequired>
                     <FormLabel>Upload Valid ID Proof</FormLabel>
                     </FormControl>
-                    <Button onClick={() =>
-          selectIFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
-            console.log("Files Selected", { name, size, source, file });
-          })
-        } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'} >
-                Upload Proof
-              </Button>
-             
-             {iFile?
-             <Text fontSize='sm'>File uploaded*</Text>
+                   
+              {iFile?
+             <Button onClick={() =>
+              selectIFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
+                console.log("Files Selected", { name, size, source, file });
+              })
+            } fontFamily={'heading'} colorScheme='blue' >
+                   Proof Uploaded
+                  </Button>
                  
              :
-             < ></>
+             <Button onClick={() =>
+              selectIFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
+                console.log("Files Selected", { name, size, source, file });
+              })
+            } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'} >
+                    Upload Proof
+                  </Button>
                  
              
             }
+           
 
 <FormControl  isRequired>
                     <FormLabel>Upload Valid Medical Proof</FormLabel>
                     </FormControl>
-                    <Button onClick={() =>
-          selectMFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
-            console.log("Files Selected", { name, size, source, file });
-          })
-        } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'} >
-                Upload Proof
-              </Button>
-             
-             {mFile?
-             <Text fontSize='sm'>File uploaded*</Text>
+                   
+
+              {mFile?
+             <Button onClick={() =>
+              selectMFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
+                console.log("Files Selected", { name, size, source, file });
+              })
+            } fontFamily={'heading'} colorScheme='blue' >
+                   Proof Uploaded
+                  </Button>
                  
              :
-             < ></>
+             <Button onClick={() =>
+              selectMFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
+                console.log("Files Selected", { name, size, source, file });
+              })
+            } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'} >
+                    Upload Proof
+                  </Button>
                  
              
             }
+             
+         
+
+<Flex>
+            
+            </Flex>
+            
       </SimpleGrid>
+    <Flex w="100%" justifyContent="">
+     
+     
+      <Button
+                onClick={handleBack}
+               
+                colorScheme="teal"
+                variant="solid"
+                w="7rem"
+                mr="5%">
+                Back
+              </Button>
+              
+              <Button
+                w="7rem"
+                colorScheme="red"
+                variant="solid"
+                onClick={submitForm}>
+                Submit
+              </Button>
+    </Flex>
     </>
   );
 };
 
 export default function Multistep() {
   const toast = useToast();
+  const Navigate = useNavigate();
+
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(33.33);
+  const [reqData, setReqData] = useState({});
+
+
+  const setData = (data) => {
+   
+    setReqData({ ...reqData, ...data });
+    console.log(reqData);
+  }
+
+
+
+  const handleBack = () => {
+    
+    setStep(step - 1);
+    setProgress(progress - 33.33);
+  }
+
+  const handleNext = (e) => {
+
+    if (step === 1) {
+      setStep(step + 1);
+      setProgress(progress + 33.33);
+    } else if (step === 2) {
+      setStep(step + 1);
+      setProgress(progress + 33.33);
+    } else {
+      toast({
+        title: 'Account created.',
+        description: "We have received your form.",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handlesubmit =async ()=>{
+   
+    console.log(reqData);
+    if(!reqData){
+      console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+toast({
+
+title:'Please fill all the fields',
+status:'error',
+duration:3000,
+isClosable:true
+    })
+  }else{
+    console.log("haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    try{
+      console.log(reqData)
+      const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+     }
+     const {data} =await axios.post(
+      '/api/doctor',
+        reqData,
+        config
+     )
+     toast({
+      title: 'Account created.',
+      description: "We have received your form.",
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+    Navigate("/")
+    
+    
+    }
+    catch(err){
+      
+      console.log(err);
+      toast({
+        title: "Error Occured! ",
+        description: err.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
+    console.log(reqData)
+    
+  }
+    
+  }
+
   return (
     <>
       <Box
@@ -449,56 +780,8 @@ export default function Multistep() {
           mb="5%"
           mx="5%"
           isAnimated></Progress>
-        {step === 1 ? <Form1 /> : step === 2 ? <Form2 /> : <Form3 />}
+        {step === 1 ? <Form1  nextStep={handleNext} setData={setData} /> : step === 2 ? <Form2 backStep={handleBack} setData={setData}  nextStep={handleNext}/> : <Form3 setData={setData} backStep={handleBack} handleSubmit={handlesubmit} />}
         <ButtonGroup mt="5%" w="100%">
-          <Flex w="100%" justifyContent="space-between">
-            <Flex>
-              <Button
-                onClick={() => {
-                  setStep(step - 1);
-                  setProgress(progress - 33.33);
-                }}
-                isDisabled={step === 1}
-                colorScheme="teal"
-                variant="solid"
-                w="7rem"
-                mr="5%">
-                Back
-              </Button>
-              <Button
-                w="7rem"
-                isDisabled={step === 3}
-                onClick={() => {
-                  setStep(step + 1);
-                  if (step === 3) {
-                    setProgress(100);
-                  } else {
-                    setProgress(progress + 33.33);
-                  }
-                }}
-                colorScheme="teal"
-                variant="outline">
-                Next
-              </Button>
-            </Flex>
-            {step === 3 ? (
-              <Button
-                w="7rem"
-                colorScheme="red"
-                variant="solid"
-                onClick={() => {
-                  toast({
-                    title: 'Account created.',
-                    description: "We've created your account for you.",
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: true,
-                  });
-                }}>
-                Submit
-              </Button>
-            ) : null}
-          </Flex>
         </ButtonGroup>
       </Box>
     </>

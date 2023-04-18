@@ -47,7 +47,7 @@ const submitHandler =async (e) => {
     },
  }
  const {data} =await axios.post(
-    "/api/user/login",
+    "http://localhost:5000/api/user/login",
     {id,password},
     config
  )
@@ -59,7 +59,7 @@ const submitHandler =async (e) => {
 })
 localStorage.setItem("userInfo",JSON.stringify(data))
 setLoading(false)
-Navigate("/chats")
+Navigate("/user")
 
 
 }

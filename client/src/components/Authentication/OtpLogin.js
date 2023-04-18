@@ -173,7 +173,7 @@ const submitOTP = async () => {
       // })
       localStorage.setItem("userInfo",JSON.stringify(data))
       setLoading(false)
-      Navigate("/chats")
+      Navigate("/user")
       
       
       }

@@ -105,7 +105,7 @@ import {
     })
     localStorage.setItem("DoctorInfo",JSON.stringify(data))
     setLoading(false)
-    Navigate("/")
+    Navigate("/doctor")
     
     
     }
