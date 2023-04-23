@@ -171,7 +171,7 @@ const submitOTP = async () => {
       //   duration: 5000,
       //   isClosable: true,
       // })
-      localStorage.setItem("userInfo",JSON.stringify(data))
+      localStorage.setItem("patientInfo",JSON.stringify(data))
       setLoading(false)
       Navigate("/user")
       

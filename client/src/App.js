@@ -18,6 +18,8 @@ import DoctorLandingPage from "./pages/DoctorLandingPage";
 import DoctorRegister from "./pages/DoctorRegister"
 import DoctorLogin from "./pages/DoctorLogin";
 import DoctorPrescription from "./pages/DoctorPrescription";
+import CurrentMedicines from "./pages/CurrentMedicines";
+import  DCurrentMedicines from "./pages/DCurrentMedicines";
 function App() {
   return (
     <div className="App">
@@ -30,11 +32,15 @@ function App() {
 <Route path="/doctorsignup" element={<DoctorRegister />} />
 <Route path="/doctor/selectpatient" element={<SelectPatient />} />
 <Route path="/doctor/prescription" element={<DoctorPrescription />} />
+<Route path="/doctor/currentmedicines" element={<DCurrentMedicines />} />
         {/* <Route path="/login" element={<Homepage />} /> */}
         <Route path="/user" element={<UserLandingPage />} />
+        <Route path="/user/prescription" element={<Prescription />} />
+ <Route path="/user/currentmedicines" element={<CurrentMedicines />} />
+
+
         <Route path="/doctor" element={<DoctorLandingPage />} />
 
-        <Route path="/prescription" element={<Prescription />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/" element={<Landing />} />
         <Route path="*" element={<NotFoundPage />} />

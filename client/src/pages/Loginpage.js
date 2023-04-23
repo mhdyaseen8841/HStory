@@ -10,10 +10,10 @@ function Loginpage() {
 
   const Navigate = useNavigate();
 useEffect(() => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-  if(userInfo){
-    Navigate("/user")
-  }
+  // const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+  // if(userInfo){
+  //   Navigate("/user")
+  // }
 }, [])
 
   return (

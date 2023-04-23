@@ -14,15 +14,16 @@ const  [docName, setDocName] = useState('')
   }
 
   useEffect(() => {
+    
     document.title = 'Doctor Dashboard'
     if(!localStorage.getItem("DoctorInfo")){
-      console.log('No Doctor Info');
+    
       Navigate('/')
     }else{
-      console.log('Doctor Info');
+      
       setDoctor(JSON.parse(localStorage.getItem("DoctorInfo")))
       setDocName(doctor.DocName)
-      console.log(docName);
+      
     }
    
   }, [])

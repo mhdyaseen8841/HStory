@@ -81,9 +81,16 @@ const config = {
 }
  const {data} = await axios.post(`/api/chat`, {doctorId:userId}, config)
  console.log(data);
- if(!chats.find((c)=> c._id === data._id)) setChats([data, ...chats])
+ if(!chats.find((c)=> c._id === data._id)) {
+
+   setChats([data, ...chats])
+ }else{
+  console.log('already exists')
+ }
+
 
  setSelectedChat(data)
+
 setLoadingChat(false)
 onClose();
   }catch(err){
@@ -128,7 +135,11 @@ const logoutHandler = () => {
         <Text fontSize="2xl" >
           Hstory
         </Text>
-        <div>
+        <Box display="flex" alignItems="center">
+        <Button sx={{background:'white'}}  flexGrow={1} onClick={()=>Navigate('/doctor')}>
+         Dashboard
+        </Button>
+
           <Menu>
 <MenuButton p={1}>
   <NotificationBadge
@@ -169,7 +180,7 @@ effect = {Effect.SCALE}
   <MenuItem onClick={logoutHandler}>Logout</MenuItem>
 </MenuList>
           </Menu>
-        </div>
+        </Box>
       </Box>
 
 

@@ -1,69 +1,121 @@
-
-
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import DataTable from 'react-data-table-component';
-import { Box, Button, Flex, HStack, Heading, Spacer, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Heading, Spacer, Text, useToast,
+FormControl,FormLabel,Input } from '@chakra-ui/react';
+import axios from 'axios'
+import { ChatState } from '../Context/ChatProvider'
+import { useNavigate } from 'react-router-dom'
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react'
+
+import PrescriptionDialog from '../components/prescription/prescriptionModal'
 
 
-
-
-
-const data = [
-    { name: 'John Doe', email: 'john.doe@example.com', phone: '+1 (555) 555-1212', date: '2022-04-08' },
-    { name: 'Jane Smith', email: 'jane.smith@example.com', phone: '+1 (555) 555-2323', date: '2022-04-09' },
-    { name: 'Bob Johnson', email: 'bob.johnson@example.com', phone: '+1 (555) 555-3434', date: '2022-04-10' },
-    { name: 'Alice Brown', email: 'alice.brown@example.com', phone: '+1 (555) 555-4545', date: '2022-04-11' },
-  ];
 
   const columns = [
-    { name: 'Name', selector: 'name', sortable: true },
-    { name: 'Email', selector: 'email', sortable: true },
-    { name: 'Phone Number', selector: 'phone', sortable: true },
-    { name: 'Date', selector: 'date', sortable: true },
+    { name: 'Date', selector: row=>row.visitDate, sortable: true },
+    { name: 'Case', selector: row=>row.caseReason, sortable: true },
+    { name: 'advise', selector: row=>row.advice, sortable: true },
+    { name: 'Doctor',  selector: row => row.doctor.DocName, sortable: true },
   ];
   
-
+  
 
   const Prescription = () => {
+    const Navigate = useNavigate();
+
+    const {selectedChat, setSelectedChat, user,patient, chats, setChats} = ChatState()
+
+    const toast = useToast()
     const [searchText, setSearchText] = useState('');
-  
+  const [data, setData] = useState([]);
+const [open,setOpen] = useState(false)
+const [token,setToken] = useState('');
+const [prescription,setPrescription] = useState('')
+
+    useEffect(() => {
+
+
+    let pId = ""
+    if(patient){
+      pId=patient._id
+
+    }
+    
+       if(pId==""){
+Navigate('/')
+       }else{
+        console.log(pId)
+      
+        let token = patient.token
+        setToken(token)
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      
+        axios.post('/api/prescription/allprescriptions',{id:pId} ,config).then((res) => {
+          console.log(res.data)
+           setData(res.data)
+        }).catch((err) => {
+          console.log(err)
+        })
+       }
+       
+      
+        }, []);
+
     const handleSearch = (event) => {
       setSearchText(event.target.value);
     };
   
     const filteredData = data.filter((item) =>
-      item.name.toLowerCase().includes(searchText.toLowerCase())
+      item.caseReason.toLowerCase().includes(searchText.toLowerCase())
     );
+
+    const handleAdd = (pid) => {
+      console.log(pid)
+      setPrescription(pid)
+setOpen(true)
+    }
+
+    const handleClose = () => {
+      setOpen(false)
+    }
   
     return (
       <Box>
         <Flex alignItems='center' bg='#cccccc' px={4} py={3}>
           <Heading fontSize='40px'>History</Heading>
           <Spacer />
-          <Button mr={'4'} variant='solid' colorScheme='blue'>
-            Prescription
+          <Button mr={'4'} onClick={()=>Navigate('/user')} variant='solid' colorScheme='blue'>
+            Home
           </Button>
-          <Button variant='solid' colorScheme='blue'>
-            Chat
-          </Button>
+         
         </Flex>
-     
-
+     <PrescriptionDialog open={open} close={handleClose} pid={prescription} token={token}/>
 
   
         <Box mt={4} p={4} mx='auto' alignItems='center' width='80%'  >
         
-        <HStack justify="flex-end">
-  <Button variant="solid" colorScheme="blue" mb={2}>
-    Add
-  </Button>
-</HStack>
+       
           <DataTable
+           onRowClicked={(row)=>handleAdd(row._id)}
             columns={columns}
             data={filteredData}
             pagination
             highlightOnHover
             striped
+
             subHeader
             subHeaderComponent={
               <input

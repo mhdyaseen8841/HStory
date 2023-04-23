@@ -5,6 +5,7 @@ const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
     const Navigate = useNavigate();
    const [user, setUser] = useState()
+   const [patient, setPatient] = useState()
    const [selectedChat, setSelectedChat] = useState()
    const [chats, setChats] = useState([]);
    const [notifications, setNotifications] = useState([]);
@@ -14,6 +15,13 @@ const ChatProvider = ({ children }) => {
     console.log("dsfjsdfjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
     console.log(userInfo)
     setUser(userInfo)
+    console.log(localStorage.getItem('patientInfo'))
+    const patientInfo = JSON.parse(localStorage.getItem('patientInfo'))
+    console.log("aaaaaaaaaaaaaaaaaaaaaaa")
+    console.log(patientInfo)
+    if(patientInfo){
+        setPatient(patientInfo)
+    }
     
 
   
@@ -21,7 +29,7 @@ const ChatProvider = ({ children }) => {
 
 
     return (
-        <ChatContext.Provider value={{user,setUser, selectedChat, setSelectedChat,chats,setChats,notifications,setNotifications}}>
+        <ChatContext.Provider value={{user,setUser,patient, selectedChat, setSelectedChat,chats,setChats,notifications,setNotifications}}>
         {children}
         </ChatContext.Provider>
     );

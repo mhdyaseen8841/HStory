@@ -58,11 +58,13 @@ const Navbar = () => {
         onClick={() => {
           Navigate("/chat");
         }}
+        mr={2}
       >
         Chat
       </Button>
-      <Menu>
-        <MenuButton p={1} as={Button} rightIcon={<ChevronDownIcon />}>
+
+      <Menu ml={2}>
+        <MenuButton p={1} pl={2} as={Button} rightIcon={<ChevronDownIcon />}>
           <Avatar size="sm" cursor="pointer" name={user.DocName} src={user.pic} />
         </MenuButton>
         <MenuList>

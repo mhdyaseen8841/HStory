@@ -16,9 +16,10 @@ function ChatPage() {
 const [fetchAgain, setFetchAgain] = useState(false)
 useEffect(() => {
 
- if(!user){
-    Navigate("/")
- }
+    console.log(user)
+//  if(!user){
+//     Navigate("/")
+//  }
 
 
 }, [])

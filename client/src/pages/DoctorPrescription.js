@@ -5,6 +5,7 @@ import DataTable from 'react-data-table-component';
 import { Box, Button, Flex, HStack, Heading, Spacer, Text, useToast,
 FormControl,FormLabel,Input } from '@chakra-ui/react';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Modal,
@@ -15,6 +16,8 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
+import {Spinner} from "@chakra-ui/spinner"
+import PrescriptionDialog from '../components/prescription/prescriptionModal'
 
 
 
@@ -186,9 +189,14 @@ console.log(Reqdata)
 
   const DoctorPrescription = () => {
     const toast = useToast()
+    const Navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
   const [data, setData] = useState([]);
 const [open,setOpen] = useState(false)
+const [pOpen,setPOpen] = useState(false)
+const [prescription,setPrescription] = useState('')
+const [token,setToken] = useState('');
+const [loading, setLoading] = useState(true);
     useEffect(() => {
     
        let pId = localStorage.getItem("patientId")
@@ -196,6 +204,7 @@ const [open,setOpen] = useState(false)
       
           let doctor=JSON.parse(localStorage.getItem("DoctorInfo"))
           let token = doctor.token
+          setToken(token)
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -203,10 +212,18 @@ const [open,setOpen] = useState(false)
           }
         
           axios.post('/api/prescription/allprescriptions',{id:pId} ,config).then((res) => {
+            setLoading(false);
             console.log(res.data)
              setData(res.data)
           }).catch((err) => {
             console.log(err)
+            toast({
+              title: 'Error fetching prescriptions',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            });
+            setLoading(false);
           })
       
         }, [open]);
@@ -218,10 +235,22 @@ const [open,setOpen] = useState(false)
     const filteredData = data.filter((item) =>
       item.caseReason.toLowerCase().includes(searchText.toLowerCase())
     );
+    
 
     const handleAdd = () => {
 setOpen(true)
     }
+
+    const handlePAdd = (pid) => {
+      console.log(pid)
+      setPrescription(pid)
+      setPOpen(true)
+    }
+
+    const handlePClose = () => {
+      setPOpen(false)
+    }
+  
 
     const handleClose = () => {
       setOpen(false)
@@ -232,25 +261,43 @@ setOpen(true)
         <Flex alignItems='center' bg='#cccccc' px={4} py={3}>
           <Heading fontSize='40px'>History</Heading>
           <Spacer />
-          <Button mr={'4'} variant='solid' colorScheme='blue'>
-            Prescription
+
+          <Button mr={'4'} onClick={()=>Navigate('/doctor')} variant='solid' colorScheme='blue'>
+            Home
           </Button>
-          <Button variant='solid' colorScheme='blue'>
+         
+          <Button onClick={()=>Navigate('/chat')} variant='solid' colorScheme='blue'>
             Chat
           </Button>
         </Flex>
      
 <AddModal open={open} close={handleClose}/>
+<PrescriptionDialog open={pOpen} close={handlePClose} pid={prescription} token={token}/>
 
   
         <Box mt={4} p={4} mx='auto' alignItems='center' width='80%'  >
         
-        <HStack justify="flex-end">
-  <Button variant="solid" colorScheme="blue" mb={2} onClick={handleAdd}>
+        <HStack justify="flex-end" mb={2}>
+        <Button variant="solid" colorScheme="blue"  onClick={()=>Navigate('/doctor/currentmedicines')}>
+    View Current Medicines
+  </Button>
+  <Button variant="solid" colorScheme="blue"  onClick={handleAdd}>
     Add
   </Button>
 </HStack>
+{loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spinner
+          thickness='4px'
+          speed='0.65s'
+          emptyColor='gray.200'
+          color='blue.500'
+          size='xl'
+        />
+      </div>
+      ) : (
           <DataTable
+            onRowClicked={(row)=>handlePAdd(row._id)}
             columns={columns}
             data={filteredData}
             pagination
@@ -268,6 +315,7 @@ setOpen(true)
               />
             }
           />
+      )}
         </Box>
 
 
