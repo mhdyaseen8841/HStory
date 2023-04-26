@@ -45,17 +45,36 @@ const doctorSchema = mongoose.Schema({
         type: "String",
         required: true,
       }, 
+      Reason:{
+        type:"String"
+      }
     },
     { timestaps: true }
   );
 
   doctorSchema.methods.matchPassword = async function (enteredPassword) {
+    console.log("hey")
     console.log(this.password);
     return await bcrypt.compare(enteredPassword,this.password)  
     }
 
-    doctorSchema.pre("save", async function(next) {
+
+  
+    doctorSchema.pre("save", async function(next,options) {
       const user = this;
+      console.log("status");
+      console.log(options.SaveOptions);
+      if(options.updateType==="true"){
+       
+        next();
+      }else{
+        console.log("new");
+        const salt = await bcrypt.genSalt(10);
+        console.log(salt.red);
+        console.log("psw" + user.password);
+        user.password = await bcrypt.hash(user.password, salt);
+        console.log(user.password);
+      }
       
       console.log("name" + user.DocName);
     
@@ -63,11 +82,7 @@ const doctorSchema = mongoose.Schema({
         next();
       }
     
-      const salt = await bcrypt.genSalt(10);
-      console.log(salt.red);
-      console.log("psw" + user.password);
-      user.password = await bcrypt.hash(user.password, salt);
-      console.log(user.password);
+     
     });
   
   if (!mongoose.models.Doctor) {

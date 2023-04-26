@@ -8,6 +8,7 @@ app.use(express.json());
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const colors = require('colors');
+
 const userRoutes = require('./routes/userRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const chatRoutes = require('./routes/chatRoutes');

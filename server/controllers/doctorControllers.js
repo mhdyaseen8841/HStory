@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Doctor = require("../model/DoctorModel");
 
 const generateToken = require("../config/generateToken");
+const generateFpassToken = require("../config/generateFpassToken");
+const jwt = require("jsonwebtoken")
 let otp=0;
 
 const registerDoctor =asyncHandler(async(req,res)=>{
@@ -33,7 +35,7 @@ const user = await Doctor.create({
     City,
     State,
     Zip,
-    Sign
+    
 })
 
 if(user){
@@ -60,6 +62,10 @@ const authDoctor = asyncHandler(async (req, res) => {
     const { DocEmail, password } = req.body;
 
     const user = await Doctor.findOne({DocEmail})
+    ///check status
+    console.log(password)
+    
+    if(user.status){
     if(user&& (await user.matchPassword(password))){
      //add validation for status is accepted
      if(user.status==="accepted"){
@@ -76,10 +82,19 @@ const authDoctor = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('Your Registration is pending')
      }else if(user.status ==="blocked"){
+        let reason = user.Reason
+        let err= "Blocked by admin contact admin for further actions, \n Reason:"+reason
         res.status(401)
-        throw new Error('Blocked by admin contact admin for more details')
-     }else{
+        throw new Error(err)
+     }else if(user.status==="rejected"){
+        let reason = user.Reason
+        let err= "Your Registration Rejected try register again, \n Reason:"+reason
+res.status(401)
+        throw new Error(err)
+     }
+     else{
         res.status(401)
+        
         throw new Error('Some Error occured try later')
      }
         
@@ -88,6 +103,10 @@ const authDoctor = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('Invalid email or password')
     }   
+}else{
+    res.status(401)
+    throw new Error('Invalid email or password')
+}
 })
 
 const sendPatientOtp = asyncHandler(async (req, res) => {
@@ -117,9 +136,30 @@ const validatePatient = asyncHandler(async (req, res) => {
     }})
 
 
-const getAlldoctors = asyncHandler(async (req, res) => {
-    const doctors = await Doctor.find({ status: { $ne: 'pending' }})
+    const getAlldoctors = asyncHandler(async (req, res) => {
+        const doctors = await Doctor.find({ 
+            status: { 
+                $nin: ['pending', 'rejected'] 
+            }
+        })
+        res.json(doctors)
+    })
+    
+
+const getDoctorByID = asyncHandler(async (req, res) => {
+try{
+
+    let id = req.body.id
+    if(!id){
+        res.status(401)
+        throw new Error('Invalid Doctor ID')
+    }
+    const doctors = await Doctor.findById(id)
     res.json(doctors)
+}catch(err){
+    res.status(401)
+    throw new Error('Invalid Doctor ID')
+}
 })
 
 
@@ -133,6 +173,57 @@ const getDoctorBasedOnSpeciality = asyncHandler(async (req, res) => {
     const doctors = await Doctor.find(keyword).find({ _id: { $ne: req.user._id } })
     res.json(doctors)
 })
+
+const updateDoctor = asyncHandler(async (req, res) => {
+    id= req.body.id
+    try{
+        
+        const user = await Doctor.findById(id)
+        if(user){
+            user.DocName = req.body.DocName || user.DocName
+            user.MobNum = req.body.MobNum || user.MobNum
+            user.pic = req.body.pic || user.pic
+        user.gender=req.body.gender || user.gender
+        user.Hospital = req.body.Hospital || user.Hospital
+        user.Speciality = req.body.Speciality || user.Speciality
+        user.education = req.body.education || user.education
+        user.HospitalAddress = req.body.HospitalAddress || user.HospitalAddress
+        user.DocAddress = req.body.DocAddress || user.DocAddress
+        user.Experience = req.body.Experience || user.Experience
+        user.RegistrationCouncil=req.body.RegistrationCouncil || user.RegistrationCouncil
+        user.RegistrationNo=req.body.RegistrationNo || user.RegistrationNo
+        user.City=req.body.City || user.City
+        user.State=req.body.State || user.State
+        user.Zip = req.body.Zip || user.Zip
+
+
+
+
+
+        const options = { updateType: 'true' };
+        const updatedUser = await user.save(options)
+        res.json({
+            _id:updatedUser._id,
+            DocName:updatedUser.DocName,
+            DocEmail:updatedUser.DocEmail,
+            Speciality:updatedUser.Speciality,
+            MobNum:updatedUser.MobNum,
+            pic:updatedUser.pic,
+            status:updatedUser.status,
+            Hospital:updatedUser.Hospital,
+        })
+    }else{
+        res.status(401)
+        throw new Error('Invalid Doctor ID')
+    }
+}catch(err){
+    res.status(401)
+    console.log(err)
+    throw new Error(err.message)
+}
+})
+        
+        
 
 
 const searchDoc = asyncHandler(async (req, res) => {
@@ -153,4 +244,62 @@ const searchDoc = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = {registerDoctor,authDoctor,searchDoc,getAlldoctors,getDoctorBasedOnSpeciality,sendPatientOtp,validatePatient};
+const forgetpassword = asyncHandler(async (req, res) => {
+    const { DocEmail } = req.body;
+console.log(DocEmail)
+    
+    try {
+        const user = await Doctor.findOne({DocEmail})
+         if(user){
+            const token = generateFpassToken(user._id)
+
+         let reset= "http://localhost:3001/doctor/resetpass?token="+token
+            res.json({status:"success",reset})
+            }else{
+                res.status(401)
+                throw new Error('Invalid Email')
+            }
+    } catch (error) {
+        console.log(error)
+        res.status(401)
+                throw new Error("Error occured")
+    }
+
+
+
+})
+
+const validateForgetPassword = asyncHandler(async (req, res) => {
+    const { token,password } = req.body;
+    console.log(token)
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      console.log(decoded)
+      if(!decoded.id){
+            res.status(401)
+            throw new Error('Invalid Token')
+    }else{
+          const user = await Doctor.findById(decoded.id)
+          if(user){
+              user.password = password
+              
+                await user.save()
+              res.json({status:"success"})
+          }
+          else{
+              res.status(401)
+              throw new Error('Invalid Token')
+          }
+
+      }
+       
+    } catch (error) {
+        console.log(error)
+        res.status(401)
+
+        throw new Error("Error occured")
+    }
+})
+
+
+module.exports = {registerDoctor,authDoctor,searchDoc,getAlldoctors,getDoctorBasedOnSpeciality,updateDoctor,sendPatientOtp,getDoctorByID,validatePatient,forgetpassword,validateForgetPassword};

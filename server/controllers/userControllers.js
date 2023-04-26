@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../model/UserModel");
 const generateToken = require("../config/generateToken");
+const generateFpassToken = require("../config/generateFpassToken");
+
 const { ObjectId } = require('mongodb');
 const { log } = require("console");
 
@@ -184,5 +186,35 @@ const allUsers = asyncHandler(async (req, res) => {
 // });
 
 
+const forgetPassword = asyncHandler(async (req, res) => {
+    const {id} = req.body;
+    const objectId = ObjectId(id);
+    try{
 
-module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate};
+        const user = await User.findOne({ _id: new ObjectId(id) })
+        if(user){
+            //get email
+          let  email=user.email;
+            //send otp to email
+            //
+            //
+            //
+            const token = generateFpassToken(user._id)
+
+            let reset= "http://localhost:3001/doctor/resetpass?token="+token
+               res.json({status:"success",reset})
+            
+}else{
+    res.status(401)
+    throw new Error('Invalid user')
+}
+}catch(err){
+    console.log(err);
+    res.status(401)
+    throw new Error(err.message)
+}
+
+})
+
+
+module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate,forgetPassword};

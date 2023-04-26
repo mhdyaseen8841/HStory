@@ -59,11 +59,14 @@ const authUser = asyncHandler(async (req, res) => {
                     token:generateToken(user._id)
                 })
             }else{
+                console.log("heyehey")
                 res.status(401).json({ message: 'Invalid email or password' });
                 throw new Error('Invalid email or password')
             }  
 
         }catch(err){
+            // res.status(404)
+            // throw new Error(err)
             console.log(err);
         }
         
@@ -76,6 +79,8 @@ const authUser = asyncHandler(async (req, res) => {
 const getpendingDoctors = asyncHandler(async (req,res)=>{
     try{
        
+        console.log("hello")
+        
         const pDoctors= await Doctor.find({status:"pending"})
         
         res.json(pDoctors)
@@ -99,8 +104,12 @@ const acceptdoctor = asyncHandler(async (req, res) => {
         if (doctor) {
       
             doctor.status = "accepted"
-            const updatedDoctor = await doctor.save()
-            
+            console.log("doctor:")
+            console.log(doctor)
+            const options = { updateType: 'true' };
+            const updatedDoctor = await doctor.save(options)
+            console.log("updatedDoctor:")
+            console.log(updatedDoctor)
             res.json({
                 _id: updatedDoctor._id,
                 name: updatedDoctor.name,
@@ -129,6 +138,123 @@ const acceptdoctor = asyncHandler(async (req, res) => {
 
 })
 
+const rejectReq = asyncHandler(async (req, res) => {
+
+    const { id,reason } = req.body;
+    try{
+        const doctor = await Doctor.findById(id)
+
+        if (doctor) {
+      
+            doctor.status = "rejected"
+            doctor.Reason=reason
+            const options = { updateType: 'true' };
+            const updatedDoctor = await doctor.save(options)
+            
+            res.json({
+                _id: updatedDoctor._id,
+                name: updatedDoctor.name,
+                email: updatedDoctor.email,
+                pic: updatedDoctor.pic,
+                mobno: updatedDoctor.mobno,
+                address: updatedDoctor.address,
+                city: updatedDoctor.city,
+                district: updatedDoctor.district,
+                state: updatedDoctor.state
+            })
+       
+           
+    } else {
+        res.status(404)
+        throw new Error('error occured')
+    }
+
+    }catch(err){
+        console.log(err);
+        res.status(404)
+        throw new Error(err)
+    }
+   
+    
+
+
+})
+
+const UnblockDoctor = asyncHandler(async (req, res) => {
+    const { id } = req.body;
+    try{
+        const doctor = await Doctor.findById(id)
+
+        if (doctor) {
+      
+            doctor.status = "accepted"
+            doctor.Reason=""
+            const options = { updateType: 'true' };
+            const updatedDoctor = await doctor.save(options)
+            
+            res.json({
+                _id: updatedDoctor._id,
+                name: updatedDoctor.name,
+                email: updatedDoctor.email,
+                pic: updatedDoctor.pic,
+                mobno: updatedDoctor.mobno,
+                address: updatedDoctor.address,
+                city: updatedDoctor.city,
+                district: updatedDoctor.district,
+                state: updatedDoctor.state
+            })
+       
+           
+    } else {
+        res.status(404)
+        throw new Error('error occured')
+    }
+}catch(err){
+    console.log(err);
+    res.status(404)
+    throw new Error(err)
+}
+})
+
+
+
+const BlockDoctor = asyncHandler(async (req, res) => {
+    const { id,reason } = req.body;
+    try{
+        const doctor = await Doctor.findById(id)
+console.log(id)
+        if (doctor) {
+      
+            doctor.status = "blocked"
+            doctor.Reason=reason
+            const options = { updateType: 'true' };
+            const updatedDoctor = await doctor.save(options)
+            
+            res.json({
+                _id: updatedDoctor._id,
+                name: updatedDoctor.name,
+                email: updatedDoctor.email,
+                pic: updatedDoctor.pic,
+                mobno: updatedDoctor.mobno,
+                address: updatedDoctor.address,
+                city: updatedDoctor.city,
+                district: updatedDoctor.district,
+                state: updatedDoctor.state
+            })
+       
+           
+    } else {
+
+        res.status(404)
+        throw new Error('error occured')
+    }
+}catch(err){
+    console.log(err);
+    res.status(404)
+    throw new Error(err)
+}
+})
+
 
 
 
@@ -150,6 +276,20 @@ const addspecialization = asyncHandler(async (req, res) => {
     
     })
     
+    const getRejectedDoctors = asyncHandler(async (req,res)=>{
+        try{    
+           
+            console.log("hello")
+            
+            const pDoctors= await Doctor.find({status:"rejected"})
+            
+            res.json(pDoctors)
+        }catch(err){
+            res.status(401).json({ message: 'Some Error Occured' });
+            throw new Error('Some Error Occured')
+        }
+    }
+    )
     
     const getspecialization = asyncHandler(async (req, res) => {
         const spec = await specialization.find({})
@@ -162,4 +302,4 @@ const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find({})
     res.json(users)
 })
-module.exports = {registerUser,authUser,getpendingDoctors,acceptdoctor,getspecialization,addspecialization,getAllUsers};
+module.exports = {registerUser,authUser,getpendingDoctors,acceptdoctor,getspecialization,getRejectedDoctors,UnblockDoctor,addspecialization,BlockDoctor,rejectReq,getAllUsers};
