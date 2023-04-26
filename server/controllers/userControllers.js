@@ -200,8 +200,8 @@ const forgetPassword = asyncHandler(async (req, res) => {
             //
             //
             const token = generateFpassToken(user._id)
-
-            let reset= "http://localhost:3001/doctor/resetpass?token="+token
+           
+            let reset= "http://localhost:3001/user/forgetpassword?token="+token
                res.json({status:"success",reset})
             
 }else{
@@ -217,4 +217,37 @@ const forgetPassword = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate,forgetPassword};
+const validateForgetPassword = asyncHandler(async (req, res) => {
+    const { token,password } = req.body;
+    console.log(token)
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      console.log(decoded)
+      if(!decoded.id){
+            res.status(401)
+            throw new Error('Invalid Token')
+    }else{
+          const user = await User.findById(decoded.id)
+          if(user){
+              user.password = password
+              
+                await user.save()
+              res.json({status:"success"})
+          }
+          else{
+              res.status(401)
+              throw new Error('Invalid Token')
+          }
+
+      }
+       
+    } catch (error) {
+        console.log(error)
+        res.status(401)
+
+        throw new Error("Error occured")
+    }
+})
+
+
+module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate,forgetPassword,validateForgetPassword};

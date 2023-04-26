@@ -1,19 +1,55 @@
 import React,{useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Stack, HStack, VStack, FormControl, FormLabel, Input, InputGroup, InputRightElement,Button,useToast } from '@chakra-ui/react'
+import { Stack, HStack, VStack, FormControl, FormLabel, Input, InputGroup, InputRightElement,Button,useToast, Text, Flex, Box } from '@chakra-ui/react'
 import axios from 'axios'
 function Login(props) {
 
   const Navigate = useNavigate();
   const toast = useToast()
     const [email, setEmail] = useState();
-    const [userName, setuserName] = useState(props.userData.userName);
+    const [userName, setuserName] = useState(props.userData?props.userData.userName:'');
 
     const [password, setPassword] = useState('');
     const [Show, setShow] = useState(false);
  const [loading,setLoading]=useState(false);
 
+const forgetPasswordHandler=()=>{
 
+  if(!props.userData.userId){
+    toast({
+      title: "Some Error Occur! ",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    })
+      setLoading(false)
+      return
+  }
+ axios.post("/api/user/forgetpassword",{id:props.userData.userId}).then((res)=>{
+toast({
+  title: "Email Sent! ",
+  description: "Reset email has been sent to your registered email address",
+  status: "success",
+  duration: 5000,
+  isClosable: true,
+
+})
+console.log(res);
+
+ }).catch((err)=>{
+
+  toast({
+    title: "Error Occured! ",
+    description: err.response.data.message,
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+
+
+ })
+ })
+
+}
  
 const submitHandler =async (e) => {
       setLoading(true)
@@ -81,6 +117,13 @@ catch(err){
 }
     
 const handleClick = () => setShow(!Show);
+
+useEffect(() => {
+  if(!props.userData){
+    Navigate("/")
+  }
+}, [])
+
   return (
     <VStack spacing='5px' color='black'>
       
@@ -119,7 +162,11 @@ onChange={(e)=>setPassword(e.target.value)}/>
 </InputGroup>
 </FormControl>
 
+<Box  display="flex" justifyContent="flex-end" width="100%" >
 
+
+<Text color={'#795CB2'} cursor={'pointer'} onClick={forgetPasswordHandler} >Forget Password?</Text>
+</Box>
         <Button colorScheme="blue" width="100%" style={{marginTop:15}} onClick={submitHandler}  isLoading={loading}>
     Login
     </Button>

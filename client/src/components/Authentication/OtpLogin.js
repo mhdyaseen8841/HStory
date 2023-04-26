@@ -7,7 +7,7 @@ function OtpLogin(props) {
   const Navigate = useNavigate();
   const toast = useToast()
     const [email, setEmail] = useState();
-  const [mobNum, setMobNum] = useState(props.userData.mobno);
+  const [mobNum, setMobNum] = useState(props.userData?props.userData.mobno:'');
 
   const [otp,setOtp]= useState('');
     const [password, setPassword] = useState();

@@ -21,8 +21,8 @@ const  [docName, setDocName] = useState('')
       Navigate('/')
     }else{
       
-      setDoctor(JSON.parse(localStorage.getItem("DoctorInfo")))
-      setDocName(doctor.DocName)
+      
+      
       
     }
    

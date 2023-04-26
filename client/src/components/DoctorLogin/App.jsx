@@ -222,7 +222,7 @@ import {
                   </Stack>
                   <HStack justify="space-between">
                   
-                    <Button variant="link" colorScheme="blue" size="sm">
+                    <Button variant="link" colorScheme="blue" size="sm" onClick={()=>Navigate('/doctor/forgetpass')}>
                       Forgot password?
                     </Button>
                   </HStack>

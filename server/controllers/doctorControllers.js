@@ -4,6 +4,7 @@ const Doctor = require("../model/DoctorModel");
 const generateToken = require("../config/generateToken");
 const generateFpassToken = require("../config/generateFpassToken");
 const jwt = require("jsonwebtoken")
+const { ObjectId } = require('mongodb');
 let otp=0;
 
 const registerDoctor =asyncHandler(async(req,res)=>{
@@ -175,11 +176,17 @@ const getDoctorBasedOnSpeciality = asyncHandler(async (req, res) => {
 })
 
 const updateDoctor = asyncHandler(async (req, res) => {
+    console.log(req.body)
     id= req.body.id
+    console.log(id)
+    const objectId = ObjectId(id);
+    
     try{
         
-        const user = await Doctor.findById(id)
+        const user = await Doctor.findOne({ _id: new ObjectId(id) })
+       
         if(user){
+            console.log("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
             user.DocName = req.body.DocName || user.DocName
             user.MobNum = req.body.MobNum || user.MobNum
             user.pic = req.body.pic || user.pic
@@ -213,10 +220,12 @@ const updateDoctor = asyncHandler(async (req, res) => {
             Hospital:updatedUser.Hospital,
         })
     }else{
+        console.log("heyyyy noooooooooooooooooooooooooooo")
         res.status(401)
         throw new Error('Invalid Doctor ID')
     }
 }catch(err){
+    console.log("invalid")
     res.status(401)
     console.log(err)
     throw new Error(err.message)

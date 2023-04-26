@@ -13,7 +13,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
-import Profile from '../components/Profile'
+import Profile from '../components/Profile/Profile'
 const ProfileModal = ({open,close})=>{
   return(
       <Modal onClose={close} size="full" isOpen={open} >

@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { Box, Button, Flex, Heading, Spacer, Text,Menu,MenuButton,MenuItem,MenuDivider,MenuList ,Avatar } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import Profile from "../components/Profile"
+import Profile from "../components/Profile/Profile"
 import {
     Modal,
     ModalOverlay,
@@ -26,12 +26,9 @@ const Navbar = () => {
         <ModalContent>
           <ModalHeader>Profile</ModalHeader>
           <ModalCloseButton />
-          <ModalBody sx={{background:'#85ccc3'}}>
+          <ModalBody>
             <Profile/>
             </ModalBody>
-          <ModalFooter sx={{background:'#85ccc3'}}>
-            <Button onClick={close}>Close</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     )
