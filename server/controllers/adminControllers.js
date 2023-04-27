@@ -275,6 +275,19 @@ const addspecialization = asyncHandler(async (req, res) => {
     }
     
     })
+
+    const deleteSpecialization = asyncHandler(async (req, res) => {
+        console.log(req.body)
+        const { id } = req.body;
+        const spec = await specialization.findById(id)
+        if(spec){
+            await spec.remove()
+            res.json({message:'Specialization Removed'})
+        }else{
+            res.status(404)
+            throw new Error('Specialization Not Found')
+        }
+    })
     
     const getRejectedDoctors = asyncHandler(async (req,res)=>{
         try{    
@@ -302,4 +315,27 @@ const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find({})
     res.json(users)
 })
-module.exports = {registerUser,authUser,getpendingDoctors,acceptdoctor,getspecialization,getRejectedDoctors,UnblockDoctor,addspecialization,BlockDoctor,rejectReq,getAllUsers};
+
+const getDashboardData = asyncHandler(async (req, res) => {
+    try{
+
+        const users = await User.find({})
+        const doctors = await Doctor.find({})
+        const pendingDoctors = await Doctor.find({status:"pending"})
+        const rejectedDoctors = await Doctor.find({status:"rejected"})
+        const blockedDoctors = await Doctor.find({status:"blocked"})
+        const acceptedDoctors = await Doctor.find({status:"accepted"})
+        const totalDoctors = doctors.length
+        const totalUsers = users.length
+        const totalPendingDoctors = pendingDoctors.length
+        const totalRejectedDoctors = rejectedDoctors.length
+        const totalBlockedDoctors = blockedDoctors.length
+        const totalAcceptedDoctors = acceptedDoctors.length
+        res.json({totalDoctors,totalUsers,totalPendingDoctors,totalRejectedDoctors,totalBlockedDoctors,totalAcceptedDoctors})
+    }catch(err){
+        res.status(401).json({ message: 'Some Error Occured' });
+        throw new Error('Some Error Occured')
+    }
+    
+})
+module.exports = {registerUser,authUser,getpendingDoctors,acceptdoctor,getDashboardData,deleteSpecialization,getspecialization,getRejectedDoctors,UnblockDoctor,addspecialization,BlockDoctor,rejectReq,getAllUsers};

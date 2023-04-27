@@ -1,21 +1,51 @@
+import {useState, useEffect} from 'react';
 import {
   FormControl,
   FormLabel,
   Grid,
   Input,
-  Flex,
-  InputGroup,
-  InputLeftAddon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  Button,
+  Box
 } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
 
-function Notifications({data}) {
+function Notifications({data,updateSubmit}) {
+  const [Hospital, setHospital] = useState();
+  const [Speciality, setSpeciality] = useState();
+  const [HospitalAddress, setHospitalAddress] = useState();
+  const [Zip, setZip] = useState();
   console.log(data);
+
+  useEffect(() => {
+    setHospital(data ? data.Hospital : "")
+    setSpeciality(data ? data.Speciality : "")
+    setHospitalAddress(data ? data.HospitalAddress : "")
+    setZip(data ? data.Zip : "")
+  }, [data]);
+  const toast = useToast()
+
+  const clickHandle =()=>{
+    if(!Hospital  || !Speciality || !HospitalAddress || !Zip){
+      toast({
+        title: "not Empty fieled",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+    let dat = {
+      id: data._id,
+      Hospital:Hospital,
+      HospitalAddress:HospitalAddress,
+      Speciality:Speciality,
+      Zip:Zip
+
+    }
+    updateSubmit(dat)
+  }
   return (
+    <>
     <Grid
       templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
       gap={6}
@@ -34,7 +64,7 @@ function Notifications({data}) {
         <Input
           disabled
           focusBorderColor="brand.blue"
-          type="tel"
+          type="text"
           placeholder="Phone number"
           defaultValue={data ? data.RegistrationNo : ''}
         />
@@ -43,18 +73,20 @@ function Notifications({data}) {
         <FormLabel>Current Hospital</FormLabel>
         <Input
           focusBorderColor="brand.blue"
-          type="email"
-          placeholder="doctor@sample.com"
+          type="text"
+          placeholder="Hospital"
           defaultValue={data ? data.Hospital : ''}
+          onChange={(e)=>setHospital(e.value)}
         />
       </FormControl>
       <FormControl id="city">
         <FormLabel>Speciality</FormLabel>
         <Input
           focusBorderColor="brand.blue"
-          type="email"
-          placeholder="doctor@sample.com"
+          type="text"
+          placeholder="Speciality"
           defaultValue={data ? data.Speciality : ''}
+          onChange={(e)=>setSpeciality(e.value)}
         />
       </FormControl>
       <FormControl id="country">
@@ -64,6 +96,7 @@ function Notifications({data}) {
           type="text"
           placeholder="Doctor address"
           defaultValue={data ? data.HospitalAddress : ''}
+          onChange={(e)=>setHospitalAddress(e.value)}
         />
       </FormControl>
       <FormControl id="country">
@@ -73,9 +106,14 @@ function Notifications({data}) {
           type="text"
           placeholder="city"
           defaultValue={data ? data.Zip : ''}
+          onChange={(e)=>setZip(e.value)}
         />
       </FormControl>
     </Grid>
+    <Box mt={5} py={5} px={8} borderTopWidth={1} borderColor="brand.light">
+    <Button onClick={clickHandle}>Update</Button>
+  </Box>
+  </>
   )
 }
 

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../model/UserModel");
 const generateToken = require("../config/generateToken");
 const generateFpassToken = require("../config/generateFpassToken");
+const jwt = require("jsonwebtoken")
 
 const { ObjectId } = require('mongodb');
 const { log } = require("console");
@@ -201,7 +202,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
             //
             const token = generateFpassToken(user._id)
            
-            let reset= "http://localhost:3001/user/forgetpassword?token="+token
+            let reset= "http://localhost:3000/user/forgetpassword?token="+token
                res.json({status:"success",reset})
             
 }else{

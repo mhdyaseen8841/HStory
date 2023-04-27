@@ -17,6 +17,7 @@ function CompanySettings({data,updateSubmit}) {
   const toast = useToast()
   const [collegeCount, setCollegeCount] = useState(0);
   const clickHandle =()=>{
+    let education = data.Education;
     for (var index = 0; index < collegeCount; index++) {
       let clgNme = document.getElementById(`college_name${index}`);
       let passYear = document.getElementById(`passout_year${index}`);
@@ -59,17 +60,18 @@ function CompanySettings({data,updateSubmit}) {
 
       return;
     }
-    let education = data.Education
+    console.log(education);
     let dat = {
       id: data._id,
-      
+      Education:education
     }
+    setCollegeCount(0)
     updateSubmit(dat)
   }
 
   return (
     <>
-      {data && data.Education.map((result, index) => {
+      {data && data.Education.map((result) => {
         return (
           <Flex gap="2">
             <FormControl w="60%">
@@ -88,7 +90,6 @@ function CompanySettings({data,updateSubmit}) {
                 disabled
                 type="text"
                 name="course"
-                id={`course${index}`}
                 autoComplete="course"
                 focusBorderColor="brand.400"
                 shadow="sm"
@@ -114,7 +115,6 @@ function CompanySettings({data,updateSubmit}) {
                 disabled
                 type="text"
                 name="college_name"
-                id={`college_name${index}`}
                 autoComplete="college_name"
                 focusBorderColor="brand.400"
                 shadow="sm"
@@ -141,7 +141,6 @@ function CompanySettings({data,updateSubmit}) {
                 disabled
                 type="text"
                 name="passout_year"
-                id={`passout_year${index}`}
                 autoComplete="passout_year"
                 focusBorderColor="brand.400"
                 shadow="sm"

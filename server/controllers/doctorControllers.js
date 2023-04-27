@@ -193,7 +193,7 @@ const updateDoctor = asyncHandler(async (req, res) => {
         user.gender=req.body.gender || user.gender
         user.Hospital = req.body.Hospital || user.Hospital
         user.Speciality = req.body.Speciality || user.Speciality
-        user.education = req.body.education || user.education
+        user.Education = req.body.Education || user.Education
         user.HospitalAddress = req.body.HospitalAddress || user.HospitalAddress
         user.DocAddress = req.body.DocAddress || user.DocAddress
         user.Experience = req.body.Experience || user.Experience
