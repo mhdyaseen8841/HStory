@@ -14,5 +14,4 @@ router.route('/getAlldoc').get(protect,getAlldoctors)
 router.route('/forgetpassword').post(forgetpassword)
 router.route('/validateForgetPassword').post(validateForgetPassword)
 // router.route('/resetpass').post(protect,updateDoctor)
-
 module.exports = router

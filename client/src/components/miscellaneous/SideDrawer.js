@@ -7,7 +7,7 @@ import { Box, Tooltip, Button,Stack, Text, Menu, MenuButton, MenuList, MenuItem,
 import {Effect} from 'react-notification-badge';
  
 import React, { useState } from "react";
-import {BellIcon,ChevronDownIcon} from '@chakra-ui/icons'
+import {BellIcon,ChevronDownIcon,SearchIcon} from '@chakra-ui/icons'
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
 import { ChatState } from "../../Context/ChatProvider";
 import {Spinner} from "@chakra-ui/spinner"
@@ -126,7 +126,8 @@ const logoutHandler = () => {
       >
         <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <SearchIcon/>
+            {/* <i  class="fa-solid fa-magnifying-glass"></i> */}
             <Text display={{ sm: "none", md: "flex" }} px="4">
               Search User
             </Text>

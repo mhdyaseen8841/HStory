@@ -246,7 +246,10 @@ const searchDoc = asyncHandler(async (req, res) => {
         ],
     }:{};
 
-    const doctors = await Doctor.find(keyword)
+    //find accepted doctors only
+    // const doctors 
+
+    const doctors = await Doctor.find(keyword).find({status: 'accepted'})
     
     res.send(doctors)
     

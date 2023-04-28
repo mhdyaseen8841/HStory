@@ -30,10 +30,17 @@ import PrescriptionDialog from '../components/prescription/prescriptionModal'
   
   function AddModal(props) {
     const toast = useToast()
+    const t= new Date()
+    const tomorrow = new Date(t)
+tomorrow.setDate(tomorrow.getDate() + 1)
+    const tday = new Date().toISOString().slice(0, 10)
+    
+    
 const [advice,setAdvice] = useState('')
 const [caseReason,setCaseReason] = useState('')
 let err= false;
     const handleClose = () => {
+      setRow(1)
       props.close()
     } 
 
@@ -56,7 +63,8 @@ for(let i=0;i<row;i++){
   let name = document.getElementById(`name${i}`).value
   let rules = document.getElementById(`rules${i}`).value
   let days = document.getElementById(`days${i}`).value
-  if(!name || !rules || !days){
+  let ddate  = document.getElementById(`date${i}`).value
+  if(!name || !rules || !days || !ddate){
     err=true;
     toast({
       title: "Enter all fields! ",
@@ -65,8 +73,15 @@ for(let i=0;i<row;i++){
       isClosable: true,
     })
   }
-  console.log(name,rules,days)
-  medicine.push({name,rules,days})
+  let inputDate = new Date(ddate);
+let day = inputDate.getDate().toString().padStart(2, '0');
+let month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+let year = inputDate.getFullYear().toString();
+
+let Sdate = `${day}/${month}/${year}`;
+
+  console.log(name,rules,days,Sdate)
+  medicine.push({name,rules,days,Sdate})
 }
 
 if(err){
@@ -136,7 +151,7 @@ console.log(Reqdata)
       <>
        
   
-        <Modal isOpen={props.open} onClose={handleClose}>
+        <Modal size="full" isOpen={props.open} onClose={handleClose}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Add Prescription</ModalHeader>
@@ -161,6 +176,20 @@ console.log(Reqdata)
     <Input id={`name${i}`}  placeholder='name' />
       <Input id={`rules${i}`} placeholder='rules' />
       <Input id={`days${i}`} placeholder='days'/>
+      <Text>
+        Start Date
+      </Text>
+      <Input
+ placeholder="Select Start Date"
+ size="md"
+ type="date"
+ min={tday}
+ id={`date${i}`} 
+ 
+ 
+/>
+
+     
     
       </HStack>
 

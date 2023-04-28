@@ -62,7 +62,7 @@ function PrescriptionDialog(props) {
 
   return (
     <>
-      <Modal isOpen={props.open} onClose={onClose}>
+      <Modal isOpen={props.open} size={"xl"} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Prescription</ModalHeader>
@@ -99,6 +99,7 @@ function PrescriptionDialog(props) {
                         <Th>Name</Th>
                         <Th>Rules</Th>
                         <Th>Days</Th>
+                        <Th>Start Date</Th>
                       </Tr>
                     </thead>
                     <tbody>
@@ -113,6 +114,7 @@ function PrescriptionDialog(props) {
                             <Td>{item.name}</Td>
                             <Td>{item.rules}</Td>
                             <Td>{item.days}</Td>
+                            <Td>{item.Sdate}</Td>
                           </Tr>
                         ))}
                     </tbody>
