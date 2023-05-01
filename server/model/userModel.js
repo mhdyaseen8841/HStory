@@ -14,10 +14,7 @@ const userSchema = mongoose.Schema({
     district:{type:String,required:true},
     state:{type:String,required:true},
     zip:{type:String,required:true},
-proof:{
-    type: "String",
-    required: true,
-},
+
     pic: {
         type: "String",
         required: true,

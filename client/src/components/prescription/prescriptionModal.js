@@ -29,6 +29,8 @@ function PrescriptionDialog(props) {
   const [isData, setIsData] = useState(false)
 
   useEffect(() => {
+    console.log("huhuhuhuhuhhuhuhuhuhuhuhuhuhhu")
+    console.log(props)
     if (props.token) {
       const config = {
         headers: {
@@ -39,6 +41,7 @@ function PrescriptionDialog(props) {
       axios
         .post('http://localhost:5000/api/prescription/getprescriptionbyid', { pId: pId }, config)
         .then((res) => {
+          console.log("heyhey")
           setData(res.data)
           setIsData(true)
         })
@@ -53,6 +56,8 @@ function PrescriptionDialog(props) {
 
           props.close()
         })
+    }else{
+      console.log('keeeeee')
     }
   }, [props.open])
 

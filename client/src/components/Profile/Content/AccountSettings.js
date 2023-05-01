@@ -56,7 +56,9 @@ function AccountSettings({data,updateSubmit}) {
         type="text"  
         placeholder="Name"
         defaultValue={data ? data.DocName : ''}
-        onChange={(e)=>setDocName(e.value)}/>
+        onChange={(e)=>{
+          console.log(e.target.value)
+          setDocName(e.target.value)}}/>
       </FormControl>
       <FormControl id="phoneNumber">
         <FormLabel>Phone Number</FormLabel>
@@ -65,7 +67,7 @@ function AccountSettings({data,updateSubmit}) {
           type="tel"
           placeholder="Phone number"
           defaultValue={data ? data.MobNum : ''}
-          onChange={(e)=>setMobNum(e.value)}
+          onChange={(e)=>setMobNum(e.target.value)}
         />
       </FormControl>
       <FormControl id="emailAddress">
@@ -90,7 +92,7 @@ function AccountSettings({data,updateSubmit}) {
           type="text"
           placeholder="Doctor address"
           defaultValue={data ? data.DocAddress : ''}
-          onChange={(e)=>setDocAddress(e.value)}
+          onChange={(e)=>setDocAddress(e.target.value)}
         />
       </FormControl>
       <FormControl id="country">
@@ -100,7 +102,7 @@ function AccountSettings({data,updateSubmit}) {
           type="text"
           placeholder="city"
           defaultValue={data ? data.City : ''}
-          onChange={(e)=>setCity(e.value)}
+          onChange={(e)=>setCity(e.target.value)}
           
         />
       </FormControl>
@@ -111,7 +113,7 @@ function AccountSettings({data,updateSubmit}) {
           type="text"
           placeholder="state"
           defaultValue={data ? data.State : ''}
-          onChange={(e)=>setState(e.value)}
+          onChange={(e)=>setState(e.target.value)}
 
         />
       </FormControl>
@@ -122,7 +124,7 @@ function AccountSettings({data,updateSubmit}) {
           type="text"
           placeholder="Zip"
           defaultValue={data ? data.zip : ''}
-          onChange={(e)=>setzip(e.value)}
+          onChange={(e)=>setzip(e.target.value)}
 
         />
       </FormControl>

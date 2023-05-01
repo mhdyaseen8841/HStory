@@ -87,19 +87,38 @@ const getCurrentMedicines = asyncHandler(async (req, res) => {
         let currentMedicines = [];
         let currentDate = new Date();
         prescriptions.forEach(prescription => {
+            console.log("?????????????????????????????????")
+            console.log(prescription)
+            console.log("///////////////////////////////////")
             let pId= prescription._id;
 
             let medicine = prescription.medicine;
             let visitDate = prescription.visitDate;
-            let dateParts = visitDate.split("/");
+//             let dateParts = visitDate.split("/");
+// let d = parseInt(dateParts[0], 10);
+// let month = parseInt(dateParts[1], 10) - 1; // Month is zero-indexed in JavaScript Dates
+// let year = parseInt(dateParts[2], 10);
+// let dateObject = new Date(year, month, d);
+// dateObject.setDate(dateObject.getDate() + 10);
+            // loop through medicine array
+            medicine.forEach(med => {
+                console.log(med)
+                
+                // if()
+                let days = med.days;
+
+                let mDate = med.Sdate;
+                let [sDay, sMonth, sYear] = mDate.split('/');
+let date2 = new Date(`${sMonth}/${sDay}/${sYear}`);
+if(date2>currentDate){
+    return
+}
+            let dateParts = mDate.split("/");
 let d = parseInt(dateParts[0], 10);
 let month = parseInt(dateParts[1], 10) - 1; // Month is zero-indexed in JavaScript Dates
 let year = parseInt(dateParts[2], 10);
 let dateObject = new Date(year, month, d);
-// dateObject.setDate(dateObject.getDate() + 10);
-            // loop through medicine array
-            medicine.forEach(med => {
-                let days = med.days;
+
                 console.log("----------------------------")
                 console.log(med.name)
                 console.log(days)
@@ -132,7 +151,8 @@ console.log("medicine is valid")
                         med,
                         Vdate:visitDate,
                         pId,
-                        pendingDays:diffDays
+                        pendingDays:diffDays,
+                        SDate:mDate
                     }
                     currentMedicines.push(res);
 

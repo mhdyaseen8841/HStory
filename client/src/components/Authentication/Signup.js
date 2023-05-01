@@ -13,12 +13,20 @@ import {
     Text,
     useColorModeValue,
     Link,
+    RadioGroup,
+    Radio,
+    useToast
+    
   } from '@chakra-ui/react';
+  import { useNavigate } from 'react-router-dom'
+  import axios from 'axios'
   import { useFileUpload } from "use-file-upload";
   import { useState } from 'react';
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
   import './Signup.css';
   export default function Signup() {
+    const toast = useToast();
+    const Navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
   const [name,setName]=useState("");
   const [email,setEmail]=useState("");
@@ -33,7 +41,105 @@ import {
 
   const [file, selectFiles] = useFileUpload()
 
+const handleSubmit = ()=>{
+  console.log(gender)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const mobileRegex = /^[0-9]{10}$/;
+  const passwordRegex = /^.{6,}$/;
+  if ( !name || !email || !password || !mobile || !gender || !address || !District || !State || !pincode || !city) {
+    // at least one value is missing
+    toast({
+      title: "Fill all the fields",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+  })
+    return;
+  }else if(!file){
+    toast({
+      title: "Please upload image",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+  })
+  } else if (!emailRegex.test(email)) {
+    toast({
+      title: "Invalid email",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }else if (!mobileRegex.test(mobile)) {
+    toast({
+      title: "Invalid mobile number",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }else if (!passwordRegex.test(password)) {
+    toast({
+      title: "Password must contain at least 6 characters",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
+  else{
 
+    console.log("All values are present");
+    // const {name,email,password,pic,mobno,address,city,state,zip,district,gender,proof} = req.body;
+
+    let data = {
+      name: name,
+      email: email,
+      mobno:mobile,
+      address: address,
+      gender: gender,
+      city: city,
+      district: District,
+     
+      zip: pincode,
+      state:State,
+      password: password,
+      pic: file.source,
+    };
+
+
+  
+     axios.post(
+      "http://localhost:5000/api/user",
+      data
+   ).then((res)=>{
+   
+
+    toast({
+      title:"Account Created",
+      description:"Login Again",
+      status:"success",
+      duration:3000,
+      isClosable:true
+    })
+    Navigate('/selectaccount')
+
+   }).catch((err)=>{
+    console.log(err)
+    toast({
+      title: "error occured",
+      description: err.message,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+  })
+   })
+
+  }
+}
+const handleNavigate=()=>{
+  Navigate('/selectaccount')
+}
     return (
       <Flex className="MyComponent"
         minH={'100vh'}
@@ -59,13 +165,13 @@ import {
                 <Box>
                   <FormControl id="firstName" isRequired>
                     <FormLabel>Name</FormLabel>
-                    <Input type="text" />
+                    <Input   value={name}  onChange={(e)=>setName(e.target.value)} type="text" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="mobile">
+                  <FormControl id="mobile" isRequired>
                     <FormLabel>Mobile</FormLabel>
-                    <Input type="text" />
+                    <Input   value={mobile} onChange={(e)=>setMobile(e.target.value)} type="text" />
                   </FormControl>
                 </Box>
               </HStack>
@@ -73,31 +179,39 @@ import {
                 <Box>
                   <FormControl id="email" isRequired>
                     <FormLabel>email</FormLabel>
-                    <Input type="email" />
+                    <Input   value={email} onChange={(e)=>{
+                      setEmail(e.target.value)
+                    }} type="email" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="gender">
-                    <FormLabel>Gender</FormLabel>
-                    <Input type="text" />
-                  </FormControl>
+                <RadioGroup id="gender" onChange={(e) => {
+  console.log(e);
+  setGender(e);
+}}>
+  <Stack direction="row">
+    <Radio value="male">Male</Radio>
+    <Radio value="female">Female</Radio>
+    <Radio value="other">Other</Radio>
+  </Stack>
+</RadioGroup>
                 </Box>
               </HStack>
               <FormControl id="address" isRequired>
                 <FormLabel>Address</FormLabel>
-                <Input type="email" />
+                <Input   value={address} onChange={(e)=>setAddress(e.target.value)} type="text" />
               </FormControl>
               <HStack>
                 <Box>
                   <FormControl id="district" isRequired>
                     <FormLabel>District</FormLabel>
-                    <Input type="email" />
+                    <Input   value={District} onChange={(e)=>setDistrict(e.target.value)} type="text" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="city">
+                  <FormControl id="city" isRequired>
                     <FormLabel>City</FormLabel>
-                    <Input type="text" />
+                    <Input   value={city} onChange={(e)=>setCity(e.target.value)} type="text" />
                   </FormControl>
                 </Box>
               </HStack>
@@ -105,29 +219,29 @@ import {
                 <Box>
                   <FormControl id="state" isRequired>
                     <FormLabel>State</FormLabel>
-                    <Input type="email" />
+                    <Input   value={State} onChange={(e)=>setState(e.target.value)} type="text" />
                   </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="pincode">
+                  <FormControl id="pincode" isRequired>
                     <FormLabel>Pincode</FormLabel>
-                    <Input type="text" />
+                    <Input   value={pincode} onChange={(e)=>setPincode(e.target.value)} type="number" />
                   </FormControl>
                 </Box>
               </HStack>
               <FormControl  isRequired>
-                    <FormLabel>Upload Valid ID Proof</FormLabel>
+                    <FormLabel>Upload Profile Picture</FormLabel>
                     </FormControl>
                     <Button onClick={() =>
           selectFiles({ accept: "image/*,application/pdf" }, ({ name, size, source, file }) => {
             console.log("Files Selected", { name, size, source, file });
           })
         } fontFamily={'heading'} bg={'gray.200'} color={'gray.800'}>
-                Upload Proof
+                Upload Picture
               </Button>
              
              {file?
-             <Text fontSize='sm'>File uploaded*</Text>
+             <Text fontSize='sm'>Picture uploaded*</Text>
                  
              :
              < ></>
@@ -138,7 +252,7 @@ import {
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? 'text' : 'password'} />
+                  <Input   value={password} onChange={(e)=>setPassword(e.target.value)} type={showPassword ? 'text' : 'password'} />
                   <InputRightElement h={'full'}>
                     <Button
                       variant={'ghost'}
@@ -158,12 +272,15 @@ import {
                   color={'white'}
                   _hover={{
                     bg: 'blue.500',
-                  }}>
+                  }}
+                  
+                  onClick={handleSubmit}
+                  >
                   Sign up
                 </Button>
               </Stack>
               <Stack pt={6}>
-                <Text align={'center'}>
+                <Text align={'center'} onClick={handleNavigate}>
                   Already a user? <Link color={'blue.400'}>Login</Link>
                 </Text>
               </Stack>

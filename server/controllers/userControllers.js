@@ -10,47 +10,68 @@ const { log } = require("console");
 let otp=0;
 
 
-const registerUser =asyncHandler(async(req,res)=>{
-const {name,email,password,pic,mobno,address,city,state,zip,district,gender,proof} = req.body;
-if(!name || !email || !password){
-    res.status(400)
-    throw new Error('Please enter all fields')
-}
-const userExist = await User.findOne({email})
-if(userExist){
-    res.status(400)
-    throw new Error('User already exist')
-}
-const user = await User.create({
-    name,
-    email,
-    password,
-    pic,
-    mobno,
-    address,
-    city,
-    district,
-    state,
-    zip,
-    proof,
-    gender
-})
+const registerUser = asyncHandler(async(req, res) => {
+    console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+    const { name, email, password, pic, mobno, address, city, state, zip, district, gender } = req.body;
+    
+    if (!name || !email || !password) {
+        console.log("hloo")
+        res.status(400);
+        throw new Error('Please enter all fields');
+    }
+    try{
 
-if(user){
-    res.status(201).json({
-        _id:user._id,
-        name:user.name,
-        email:user.email,
-        pic:user.pic,
-        mobno:user.mobno,
-        gender:user.gender,
-        token:generateToken(user._id)
-    })
-}else{
-    res.status(400)
-    throw new Error('Invalid user data')
+    
+    
+    const userWithSameMobNo = await User.find({ mobno });
+    console.log("1111111111")
+    if (userWithSameMobNo.length > 0) {
+        console.log("userFind")
+        const matchingUser = userWithSameMobNo.find(user => user.name.toLowerCase() === name.toLowerCase());
+                if (matchingUser) {
+            res.status(400);
+            throw new Error('User already exists with the same name and mobile number');
+        }
+    }
+    
+    const user = await User.create({
+        name,
+        email,
+        password,
+        pic,
+        mobno,
+        address,
+        city,
+        district,
+        state,
+        zip,
+        gender
+    });
+    
+    if (user) {
+        console.log("returnedddddddddddddddddddddddddddd")
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            pic: user.pic,
+            mobno: user.mobno,
+            gender: user.gender,
+            token: generateToken(user._id)
+        });
+    } else {
+        console.log("shafahsfsa")
+        res.status(400);
+        throw new Error('Invalid user data');
+    }
+}catch(err){
+    console.log("hhuhuhuhuhuhuhuh")
+console.log(err)
+    res.status(401);
+    throw new Error('Invalid user data');
 }
-})
+});
+
 
 const findUserAcc = asyncHandler(async (req, res) => {
     const { mobnum } = req.body;

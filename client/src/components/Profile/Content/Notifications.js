@@ -76,7 +76,7 @@ function Notifications({data,updateSubmit}) {
           type="text"
           placeholder="Hospital"
           defaultValue={data ? data.Hospital : ''}
-          onChange={(e)=>setHospital(e.value)}
+          onChange={(e)=>setHospital(e.target.value)}
         />
       </FormControl>
       <FormControl id="city">
@@ -86,7 +86,7 @@ function Notifications({data,updateSubmit}) {
           type="text"
           placeholder="Speciality"
           defaultValue={data ? data.Speciality : ''}
-          onChange={(e)=>setSpeciality(e.value)}
+          onChange={(e)=>setSpeciality(e.target.value)}
         />
       </FormControl>
       <FormControl id="country">
@@ -96,7 +96,7 @@ function Notifications({data,updateSubmit}) {
           type="text"
           placeholder="Doctor address"
           defaultValue={data ? data.HospitalAddress : ''}
-          onChange={(e)=>setHospitalAddress(e.value)}
+          onChange={(e)=>setHospitalAddress(e.target.value)}
         />
       </FormControl>
       <FormControl id="country">
@@ -106,7 +106,7 @@ function Notifications({data,updateSubmit}) {
           type="text"
           placeholder="city"
           defaultValue={data ? data.Zip : ''}
-          onChange={(e)=>setZip(e.value)}
+          onChange={(e)=>setZip(e.target.value)}
         />
       </FormControl>
     </Grid>
