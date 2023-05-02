@@ -161,10 +161,10 @@ console.log(user.mobno)
           },
         }
       let  Reqdata = {
-         mobnum : user.mobnum
+         mobnum : user.mobno
 
         }
-        const data = await axios.post(`/api/doctor/sendPatientOtp`,Reqdata,config)
+        const data = await axios.post(`http://localhost:5000/api/doctor/sendPatientOtp`,Reqdata,config)
         console.log(data);
         setOpen(true)
       }catch(error){

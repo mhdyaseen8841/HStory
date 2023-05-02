@@ -18,21 +18,23 @@ export default function Profile() {
   }, []);
 
   const getData = () => {
-    let doctor = JSON.parse(localStorage.getItem("DoctorInfo"));
-
-    let id = doctor._id;
-    if (!doctor) {
+    const patient = JSON.parse(localStorage.getItem('patientInfo'))
+            
+            console.log(patient)
+            console.log("hehehehe")
+            let id = patient._id
+            if(!patient){
       Navigate("/");
     } else {
-      setToken(doctor.token);
+      setToken(patient.token);
       const config = {
         headers: {
-          Authorization: `Bearer ${doctor.token}`,
+          Authorization: `Bearer ${patient.token}`,
         },
       };
 
       axios
-        .post("/api/doctor/getDoctorById", { id: id }, config)
+        .post("/api/user/getUser", { id: id }, config)
         .then((res) => {
           console.log(res.data);
           setData(res.data);
@@ -50,7 +52,7 @@ export default function Profile() {
       },
     };
     axios
-      .put("/api/doctor/getDoctorById", data, config)
+      .put("/api/user/getUser", data, config)
       .then((res) => {
         console.log(res.data);
         //setData(res.data)
@@ -70,7 +72,7 @@ export default function Profile() {
     <>
       <Cover />
       <Container display={{ base: "block", md: "flex" }} maxW="container.xl">
-        <Sidebar details={data} callback={updateSubmit}/>
+       
         <Content details={data} callback={updateSubmit} />
       </Container>
     </>

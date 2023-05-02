@@ -100,8 +100,9 @@ const sendOTP = async () => {
           {id},
           config
        )
+       console.log(data.otp)
        toast({
-        title: data.otp+" Otp Send Successful! ",
+        title:" Otp Send Successful! ",
         status: "success",
         duration: 5000,
         isClosable: true,

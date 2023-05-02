@@ -3,7 +3,7 @@ const User = require("../model/UserModel");
 const generateToken = require("../config/generateToken");
 const generateFpassToken = require("../config/generateFpassToken");
 const jwt = require("jsonwebtoken")
-
+const unirest = require("unirest");
 const { ObjectId } = require('mongodb');
 const { log } = require("console");
 
@@ -123,8 +123,35 @@ const authUser = asyncHandler(async (req, res) => {
            
 
                 otp = Math.floor(100000 + Math.random() * 900000);
-                 //send otp to mobile
-            //
+                console.log("mobuuuuuuuuuuuuuuuuuuuuu")
+console.log(mobnum)
+console.log(otp)
+try{
+
+    var request = unirest("POST", "https://www.fast2sms.com/dev/bulkV2");
+    
+    request.headers({
+        "authorization": process.env.FAST_SMS_API
+    });
+    
+    request.form({
+        "variables_values": otp,
+        "route": "otp",
+        "numbers": mobnum,
+    })
+
+    request.end(function (response) {
+        if (response.error) throw new Error(response.error);
+      
+        console.log(response.body);
+      });
+      
+}catch(err){
+console.log(err)
+}
+    //send otp to mobile
+    
+    //
             //
             //
 
@@ -271,5 +298,153 @@ const validateForgetPassword = asyncHandler(async (req, res) => {
     }
 })
 
+//get user detils by id
 
-module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate,forgetPassword,validateForgetPassword};
+const getUserById = asyncHandler(async (req, res) => {
+
+    const {id} = req.body
+    
+    const objectId = ObjectId(id);
+    const user = await User.findOne({ _id: new ObjectId(id) })
+    console.log(user)
+    if(user){
+       
+      
+            res.json({
+                _id:user._id,
+                name:user.name,
+                email:user.email,
+                pic:user.pic,
+                mobno:user.mobno,
+                address:user.address,
+                city:user.city,
+                district:user.district,
+                state:user.state,
+                zip:user.zip
+            })
+        
+        
+
+    }else{
+        res.status(401)
+        throw new Error('Invalid Id')
+    }   
+    
+})
+
+
+
+// const updateDoctor = asyncHandler(async (req, res) => {
+//     console.log(req.body)
+//     id= req.body.id
+//     console.log(id)
+//     const objectId = ObjectId(id);
+    
+//     try{
+        
+//         const user = await Doctor.findOne({ _id: new ObjectId(id) })
+       
+//         if(user){
+//             console.log("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+//             user.DocName = req.body.DocName || user.DocName
+//             user.MobNum = req.body.MobNum || user.MobNum
+//             user.pic = req.body.pic || user.pic
+//         user.gender=req.body.gender || user.gender
+//         user.Hospital = req.body.Hospital || user.Hospital
+//         user.Speciality = req.body.Speciality || user.Speciality
+//         user.Education = req.body.Education || user.Education
+//         user.HospitalAddress = req.body.HospitalAddress || user.HospitalAddress
+//         user.DocAddress = req.body.DocAddress || user.DocAddress
+//         user.Experience = req.body.Experience || user.Experience
+//         user.RegistrationCouncil=req.body.RegistrationCouncil || user.RegistrationCouncil
+//         user.RegistrationNo=req.body.RegistrationNo || user.RegistrationNo
+//         user.City=req.body.City || user.City
+//         user.State=req.body.State || user.State
+//         user.Zip = req.body.Zip || user.Zip
+
+
+
+
+
+//         const options = { updateType: 'true' };
+//         const updatedUser = await user.save(options)
+//         res.json({
+//             _id:updatedUser._id,
+//             DocName:updatedUser.DocName,
+//             DocEmail:updatedUser.DocEmail,
+//             Speciality:updatedUser.Speciality,
+//             MobNum:updatedUser.MobNum,
+//             pic:updatedUser.pic,
+//             status:updatedUser.status,
+//             Hospital:updatedUser.Hospital,
+//         })
+//     }else{
+//         console.log("heyyyy noooooooooooooooooooooooooooo")
+//         res.status(401)
+//         throw new Error('Invalid Doctor ID')
+//     }
+// }catch(err){
+//     console.log("invalid")
+//     res.status(401)
+//     console.log(err)
+//     throw new Error(err.message)
+// }
+// })
+
+const updateUser =asyncHandler  (async(req,res)=>{
+    console.log(req.body)
+    id= req.body.id
+    console.log(id)
+    const objectId = ObjectId(id);
+  
+    try{
+        const user = await User.findOne({ _id: new ObjectId(id) }) 
+        if(user){
+            console.log("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+            user.name = req.body.name || user.name
+            user.email = req.body.email || user.email
+            user.mobno = req.body.mobno || user.mobno
+            user.pic = req.body.pic || user.pic
+        user.gender=req.body.gender || user.gender
+        user.address = req.body.address || user.address
+        user.Hospicitytal = req.body.city || user.city
+        user.district = req.body.district || user.district
+        user.state = req.body.state || user.state
+        user.zip = req.body.zip || user.zip
+
+
+
+
+
+
+
+        const options = { updateType: 'true' };
+        const updatedUser = await user.save(options)
+        res.json({
+            _id:user._id,
+                name:user.name,
+                email:user.email,
+                pic:user.pic,
+                mobno:user.mobno,
+                address:user.address,
+                city:user.city,
+                district:user.district,
+                state:user.state,
+                zip:user.zip
+        })
+        }else{
+            console.log("heyyyy noooooooooooooooooooooooooooo")
+            res.status(401)
+            throw new Error('Invalid user ID')
+        }
+    }catch(err){
+        console.log(err)
+        res.status(401)
+
+    throw new Error(err.message)
+    }
+
+})
+
+
+module.exports = {registerUser,authUser,allUsers,findUserAcc,otpValidate,forgetPassword,validateForgetPassword,getUserById,updateUser};

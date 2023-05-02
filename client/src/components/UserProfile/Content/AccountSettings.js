@@ -4,27 +4,43 @@ import { useToast } from "@chakra-ui/react";
 
 function AccountSettings({data,updateSubmit}) {
   console.log(data)
-  const [DocName, setDocName] = useState();
-  const [MobNum, setMobNum] = useState();
-  const [DocAddress, setDocAddress] = useState();
-  const [City, setCity] = useState();
-  const [State, setState] = useState();
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [mobno, setmobno] = useState();
+  const [city, setCity] = useState();
+  const [state, setState] = useState();
+  const [ district,setDistrict]= useState();
   const [zip, setzip] = useState();
+const [address,setAddress]=useState();
+
+  
+
+
 
   useEffect(() => {
-    setDocName(data ? data.DocName : "")
-    setMobNum(data ? data.MobNum : "")
-    setDocAddress(data ? data.DocAddress : "")
-    setCity(data ? data.City : "")
-    setState(data ? data.State : "")
+    setName(data ? data.name : "")
+    setmobno(data ? data.mobno : "")
+    setEmail(data ? data.email : "")
+    setCity(data ? data.city : "")
+    setState(data ? data.state : "")
     setzip(data ? data.zip : "")
+    setDistrict(data ? data.district: "")
+    setAddress(data ? data.address: "")
   }, [data]);
   const toast = useToast()
 
   
   const clickHandle =()=>{
-    console.log(DocName)
-    if(!DocName || !MobNum || !DocAddress || !City || !State || !zip){
+    console.log(name)
+    console.log(email)
+    console.log(mobno)
+    console.log(address)
+    console.log(city)
+    console.log(state)
+    console.log(zip)
+    console.log(district)
+
+    if(!name || !email || !mobno || !address || !state || !zip  || !city  || !district  ){
       toast({
         title: "not Empty fieled",
         status: "error",
@@ -34,7 +50,7 @@ function AccountSettings({data,updateSubmit}) {
       return;
     }
     const mobNumRegex = /^[0-9]{10}$/; // regex pattern for 10 digit phone number
-if (!mobNumRegex.test(MobNum)) {
+if (!mobNumRegex.test(mobno)) {
   toast({
     title: "Invalid mobile number",
     status: "error",
@@ -45,11 +61,15 @@ if (!mobNumRegex.test(MobNum)) {
 }
     let dat = {
       id: data._id,
-      DocName:DocName,
-      MobNum:MobNum,
-      DocAddress:DocAddress,
-      City:City,
-      zip:zip
+      name:name,
+      email:email,
+      mobno:mobno,
+      address:address,
+      city:city,
+      zip:zip,
+      district:district,
+      state:state
+
     }
     updateSubmit(dat)
   }
@@ -60,15 +80,15 @@ if (!mobNumRegex.test(MobNum)) {
       gap={6}
     >
       <FormControl id="firstName">
-        <FormLabel>Doc Name</FormLabel>
+        <FormLabel>Name</FormLabel>
         <Input 
         focusBorderColor="brand.blue" 
         type="text"  
         placeholder="Name"
-        defaultValue={data ? data.DocName : ''}
+        defaultValue={data ? data.name : ''}
         onChange={(e)=>{
           console.log(e.target.value)
-          setDocName(e.target.value)}}/>
+          setName(e.target.value)}}/>
       </FormControl>
       <FormControl id="phoneNumber">
         <FormLabel>Phone Number</FormLabel>
@@ -76,42 +96,48 @@ if (!mobNumRegex.test(MobNum)) {
           focusBorderColor="brand.blue"
           type="tel"
           placeholder="Phone number"
-          defaultValue={data ? data.MobNum : ''}
-          onChange={(e)=>setMobNum(e.target.value)}
+          defaultValue={data ? data.mobno : ''}
+          onChange={(e)=>setmobno(e.target.value)}
         />
       </FormControl>
       <FormControl id="emailAddress">
         <FormLabel>Email Address</FormLabel>
         <Input
-        disabled
+        
           focusBorderColor="brand.blue"
           type="email"
-          placeholder="doctor@sample.com"
-          defaultValue={data ? data.DocEmail : ''}
-          
+          placeholder="@sample.com"
+          defaultValue={data ? data.email : ''}
+          onChange={(e)=>setEmail(e.target.value)}
         />
       </FormControl>
-      <FormControl id="city">
-        <FormLabel>GENDER</FormLabel>
-        <FormLabel disabled>{data ? data.gender : ''}</FormLabel>
-      </FormControl>
-      <FormControl id="country">
+      <FormControl id="address">
         <FormLabel>Address</FormLabel>
         <Input
           focusBorderColor="brand.blue"
           type="text"
-          placeholder="Doctor address"
-          defaultValue={data ? data.DocAddress : ''}
-          onChange={(e)=>setDocAddress(e.target.value)}
+          placeholder=" address"
+          defaultValue={data ? data.address : ''}
+          onChange={(e)=>setAddress(e.target.value)}
         />
       </FormControl>
-      <FormControl id="country">
+      <FormControl id="district">
+        <FormLabel>District</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="text"
+          placeholder="District"
+          defaultValue={data ? data.district : ''}
+          onChange={(e)=>setDistrict(e.target.value)}
+        />
+      </FormControl>
+      <FormControl id="city">
         <FormLabel>City</FormLabel>
         <Input
           focusBorderColor="brand.blue"
           type="text"
           placeholder="city"
-          defaultValue={data ? data.City : ''}
+          defaultValue={data ? data.city : ''}
           onChange={(e)=>setCity(e.target.value)}
           
         />
@@ -122,7 +148,7 @@ if (!mobNumRegex.test(MobNum)) {
           focusBorderColor="brand.blue"
           type="text"
           placeholder="state"
-          defaultValue={data ? data.State : ''}
+          defaultValue={data ? data.state : ''}
           onChange={(e)=>setState(e.target.value)}
 
         />

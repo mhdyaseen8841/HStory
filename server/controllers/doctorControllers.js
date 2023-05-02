@@ -4,6 +4,8 @@ const Doctor = require("../model/DoctorModel");
 const generateToken = require("../config/generateToken");
 const generateFpassToken = require("../config/generateFpassToken");
 const jwt = require("jsonwebtoken")
+const unirest = require("unirest");
+
 const { ObjectId } = require('mongodb');
 let otp=0;
 
@@ -113,9 +115,32 @@ res.status(401)
 const sendPatientOtp = asyncHandler(async (req, res) => {
     console.log("hiiiiiiiiiiiiiiiiiiiiiiii")
     const { mobnum } = req.body;
+    console.log(req.body)
     // sendotp(mobnum)
+    try{
+
+   
     otp = Math.floor(100000 + Math.random() * 900000);
-    res.json({otp})
+    
+    var request = unirest("POST", "https://www.fast2sms.com/dev/bulkV2");
+    
+    request.headers({
+        "authorization": process.env.FAST_SMS_API
+    });
+    
+    request.form({
+        "variables_values": otp,
+        "route": "otp",
+        "numbers": mobnum,
+    })
+
+    request.end(function (response) {
+        console.log(response)
+        if (response.error) throw new Error(response.error);
+      
+        console.log(response.body);
+      });
+    // res.json({otp})
     if(otp){
         console.log("sendotp"+otp)
         res.json({msg:"success"})
@@ -123,6 +148,12 @@ const sendPatientOtp = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('error while sending otp')
     }
+}catch(err){
+    console.log(err)
+    res.status(401)
+    throw new Error('Error Occured')
+  
+}
 })
 
 const validatePatient = asyncHandler(async (req, res) => {
@@ -236,24 +267,23 @@ const updateDoctor = asyncHandler(async (req, res) => {
 
 
 const searchDoc = asyncHandler(async (req, res) => {
-
-    const keyword = req.query.search ? {   
-        $or: [
-            { DocName: { $regex: req.query.search, $options: 'i' } },
-            { DocEmail: { $regex: req.query.search, $options: 'i' } },
-          {Speciality: { $regex: req.query.search, $options: 'i' } }
-
-        ],
-    }:{};
-
-    //find accepted doctors only
-    // const doctors 
-
-    const doctors = await Doctor.find(keyword).find({status: 'accepted'})
-    
-    res.send(doctors)
-    
-});
+    const keyword = req.query.search ? {
+      $or: [
+        { DocName: { $regex: req.query.search, $options: 'i' } },
+        { DocEmail: { $regex: req.query.search, $options: 'i' } },
+        { Speciality: { $regex: req.query.search, $options: 'i' } }
+      ],
+    } : {};
+  
+    const doctors = await Doctor.find({
+      ...keyword,
+      status: 'accepted',
+      _id: { $ne: req.user.id } // Exclude the logged-in doctor
+    });
+  
+    res.send(doctors);
+  });
+  
 
 
 const forgetpassword = asyncHandler(async (req, res) => {

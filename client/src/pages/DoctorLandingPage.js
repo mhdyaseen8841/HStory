@@ -36,7 +36,7 @@ const  [docName, setDocName] = useState('')
     <Box px={18}>
       <Text color='white' textAlign='center'>
         <Heading as='h1' size='xl'>Welcome to your Doctors Dashboard!</Heading>
-        <Text fontSize='xl' mt={4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tristique lobortis purus ac aliquam. Nam et elit euismod, feugiat nisi eu, maximus velit. Donec ac lectus at tortor facilisis dictum.</Text>
+        <Text fontSize='xl' mt={4}>Manage Your Patients easily by checking their Health History.</Text>
         <Flex justifyContent='center' mt={8}>
           <Button variant="solid" colorScheme="blue" mr={4} onClick={prescriptionHandle}>Prescription</Button>
           <Button variant="solid" colorScheme="blue">Chat</Button>

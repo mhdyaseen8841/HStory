@@ -40,7 +40,7 @@ const Doc= JSON.parse(localStorage.getItem("DoctorInfo"))
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader()
       reader.onloadend = () => {
-       
+        console.log("heyyheyhye")
         setUserProfile(reader.result)
         selectFiles(
             { accept: "image/*" },

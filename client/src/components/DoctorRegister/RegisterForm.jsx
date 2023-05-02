@@ -69,6 +69,37 @@ const Form1 = (props) => {
       });
       return;
     }
+    const mobNumRegex = /^[0-9]{10}$/; // regex pattern for 10 digit phone number
+if (!mobNumRegex.test(mobile)) {
+  toast({
+    title: "Invalid mobile number",
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+  });
+  return;
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regex pattern for email validation
+if (!emailRegex.test(email)) {
+  toast({
+    title: "Invalid email address",
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+  });
+  return;
+}
+
+if (password.length < 6) {
+  toast({
+    title: "Password must be at least 6 characters long",
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+  });
+  return;
+}
     if (!file) {
       toast({
         title: "Please upload your picture! ",
@@ -213,7 +244,7 @@ const Form1 = (props) => {
       <Button
         onClick={() =>
           selectFiles(
-            { accept: "image/*,application/pdf" },
+            { accept: "image/*" },
             ({ name, size, source, file }) => {
               console.log("Files Selected", { name, size, source, file });
             }
@@ -301,6 +332,16 @@ const Form2 = (props) => {
 
       return;
     }
+    const passwordRegex = /^[0-9]+$/; // regex pattern for numbers only
+if (!passwordRegex.test(experience)) {
+  toast({
+    title: "experience should not contain only numbers",
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+  });
+  return;
+}
     var education = [];
     for (var index = 0; index < collegeCount; index++) {
       let clgNme = document.getElementById(`college_name${index}`);
@@ -612,6 +653,9 @@ const Form3 = (props) => {
   };
 
   const submitForm = () => {
+    const currentYear = new Date().getFullYear();
+    const yearValue = parseInt(rYear);
+    const yearRegex = /^(19[5-9]\d|20[0-2]\d)$/;
     if (!iFile || !mFile || rCouncil === "" || rNumber === "" || rYear === "") {
       toast({
         title: "Please fill all the fields",
@@ -620,6 +664,22 @@ const Form3 = (props) => {
         duration: 9000,
         isClosable: true,
       });
+    }else if(!yearRegex.test(rYear)){
+      toast({
+        title: "Invalid year format",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }else if(yearValue < 1950 || yearValue > currentYear){
+      toast({
+        title: "Year should be between 1950 and the current year",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
     } else {
       console.log("esetttttt");
 
@@ -630,6 +690,7 @@ const Form3 = (props) => {
         IdentityProof: iFile.source,
         MedicalProof: mFile.source,
       };
+      console.log(data)
       props.setData(data);
       props.handleSubmit();
     }
@@ -855,7 +916,7 @@ export default function Multistep() {
       });
     }
   };
-
+ 
   const handlesubmit = async () => {
     console.log(reqData);
     if (!reqData) {
@@ -869,6 +930,8 @@ export default function Multistep() {
     } else {
       console.log("haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       try {
+
+      
         console.log(reqData);
         const config = {
           headers: {

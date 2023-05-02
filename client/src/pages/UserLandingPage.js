@@ -13,10 +13,13 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
-import Profile from '../components/Profile/Profile'
+import Profile from '../components/UserProfile/Profile'
 const ProfileModal = ({open,close})=>{
+  const closeHandler = () => {
+close()
+  }
   return(
-      <Modal onClose={close} size="full" isOpen={open} >
+      <Modal onClose={closeHandler} size="full" isOpen={open} >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Profile</ModalHeader>
@@ -25,7 +28,7 @@ const ProfileModal = ({open,close})=>{
           <Profile/>
           </ModalBody>
         <ModalFooter sx={{background:'#85ccc3'}}>
-          <Button onClick={close}>Close</Button>
+          <Button onClick={closeHandler}>Close</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -51,8 +54,12 @@ Navigate('/')
     }
   }, [patient])
 
+  const handleclose=()=>{
+    setisOpen(false);
+  }
   return (
     <Box>
+      <ProfileModal open={isOpen} close={handleclose} />
       <Flex alignItems='center' bg="#cccccc"  px={4} py={3}>
         <Heading fontSize="40px"  >History </Heading>
         <Spacer />
@@ -78,7 +85,7 @@ Navigate('/')
     <Box px={18}>
       <Text color='white' textAlign='center'>
         <Heading as='h1' size='xl'>Welcome to your Health Story!</Heading>
-        <Text fontSize='xl' mt={4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tristique lobortis purus ac aliquam. Nam et elit euismod, feugiat nisi eu, maximus velit. Donec ac lectus at tortor facilisis dictum.</Text>
+        <Text fontSize='xl' mt={4}>Get Your Health History & Track Current Medicines</Text>
         <Flex justifyContent='center' mt={8}>
           <Button variant="solid" colorScheme="blue" onClick={()=>Navigate('/user/prescription')} mr={4}>Prescription</Button>
           <Button variant="solid" colorScheme="blue" onClick={()=>Navigate('/user/currentmedicines')} mr={4}>View Current Medicines</Button>

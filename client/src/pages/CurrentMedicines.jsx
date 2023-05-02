@@ -70,7 +70,7 @@ setOpen(true)
       <Heading as="h2" mb="4" textAlign="center">
         Current Medicines
       </Heading>
-      {isData? (
+      {
         data.length  ? (
           <Flex justifyContent="space-between" flexWrap="wrap">
             {data.map((medicine, index) => (
@@ -111,9 +111,7 @@ setOpen(true)
           
           <Text textAlign="center1">No current medicines.</Text>
         )
-      ) : (
-        <Text>Loading...</Text>
-      )}
+      }
     </Box>
     </Box>
   );
