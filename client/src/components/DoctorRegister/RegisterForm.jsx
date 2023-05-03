@@ -109,6 +109,7 @@ if (password.length < 6) {
       });
       return;
     }
+    console.log(file.source)
     let data = {
       DocName: name,
       MobNum: mobile,
@@ -681,6 +682,11 @@ const Form3 = (props) => {
       });
       return;
     } else {
+      console.log(iFile)
+      console.log(iFile.source)
+      console.log(mFile)
+      console.log(mFile.source)
+      
       console.log("esetttttt");
 
       let data = {

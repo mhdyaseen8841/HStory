@@ -250,7 +250,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
             //
             const token = generateFpassToken(user._id)
            
-            let reset= "http://localhost:3000/user/forgetpassword?token="+token
+            let reset= "http://localhost:3001/user/forgetpassword?token="+token
                res.json({status:"success",reset})
             
 }else{
@@ -333,63 +333,6 @@ const getUserById = asyncHandler(async (req, res) => {
 })
 
 
-
-// const updateDoctor = asyncHandler(async (req, res) => {
-//     console.log(req.body)
-//     id= req.body.id
-//     console.log(id)
-//     const objectId = ObjectId(id);
-    
-//     try{
-        
-//         const user = await Doctor.findOne({ _id: new ObjectId(id) })
-       
-//         if(user){
-//             console.log("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-//             user.DocName = req.body.DocName || user.DocName
-//             user.MobNum = req.body.MobNum || user.MobNum
-//             user.pic = req.body.pic || user.pic
-//         user.gender=req.body.gender || user.gender
-//         user.Hospital = req.body.Hospital || user.Hospital
-//         user.Speciality = req.body.Speciality || user.Speciality
-//         user.Education = req.body.Education || user.Education
-//         user.HospitalAddress = req.body.HospitalAddress || user.HospitalAddress
-//         user.DocAddress = req.body.DocAddress || user.DocAddress
-//         user.Experience = req.body.Experience || user.Experience
-//         user.RegistrationCouncil=req.body.RegistrationCouncil || user.RegistrationCouncil
-//         user.RegistrationNo=req.body.RegistrationNo || user.RegistrationNo
-//         user.City=req.body.City || user.City
-//         user.State=req.body.State || user.State
-//         user.Zip = req.body.Zip || user.Zip
-
-
-
-
-
-//         const options = { updateType: 'true' };
-//         const updatedUser = await user.save(options)
-//         res.json({
-//             _id:updatedUser._id,
-//             DocName:updatedUser.DocName,
-//             DocEmail:updatedUser.DocEmail,
-//             Speciality:updatedUser.Speciality,
-//             MobNum:updatedUser.MobNum,
-//             pic:updatedUser.pic,
-//             status:updatedUser.status,
-//             Hospital:updatedUser.Hospital,
-//         })
-//     }else{
-//         console.log("heyyyy noooooooooooooooooooooooooooo")
-//         res.status(401)
-//         throw new Error('Invalid Doctor ID')
-//     }
-// }catch(err){
-//     console.log("invalid")
-//     res.status(401)
-//     console.log(err)
-//     throw new Error(err.message)
-// }
-// })
 
 const updateUser =asyncHandler  (async(req,res)=>{
     console.log(req.body)
