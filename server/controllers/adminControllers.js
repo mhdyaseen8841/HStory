@@ -260,6 +260,8 @@ console.log(id)
 
 const addspecialization = asyncHandler(async (req, res) => {
     const {specialised} = req.body;
+    //check for already it exist
+    
     const spec = await specialization.create({
         specialised
     })

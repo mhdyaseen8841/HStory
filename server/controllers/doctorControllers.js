@@ -11,7 +11,7 @@ let otp=0;
 
 const registerDoctor =asyncHandler(async(req,res)=>{
 
-    const {DocName,DocEmail,password,pic,MobNum,gender,Hospital,Speciality,education,HospitalAddress,DocAddress,City,IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,State,Zip,Sign} = req.body;
+    const {DocName,DocEmail,password,pic,MobNum,gender,Hospital,Speciality,Education,HospitalAddress,DocAddress,City,IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,State,Zip,Sign} = req.body;
 console.log(req.body)
 if(!DocName || !DocEmail || !password){
     res.status(400)
@@ -31,7 +31,7 @@ const user = await Doctor.create({
     gender,
     Hospital,
     Speciality,
-    education,
+    Education,
     HospitalAddress,
     DocAddress,
     IdentityProof,MedicalProof,RegYear,Experience,RegistrationCouncil,RegistrationNo,

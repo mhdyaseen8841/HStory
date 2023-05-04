@@ -395,7 +395,7 @@ if (!passwordRegex.test(experience)) {
     // ]
     console.log(education);
     let data = {
-      education: education,
+      Education: education,
       Hospital: cHospital,
       HospitalAddress: hAddress,
       Speciality: speciality,
