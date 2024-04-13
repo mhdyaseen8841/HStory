@@ -12,10 +12,9 @@ module.exports = applyTimestampsToUpdate;
  * ignore
  */
 
-function applyTimestampsToUpdate(now, createdAt, updatedAt, currentUpdate, options) {
+function applyTimestampsToUpdate(now, createdAt, updatedAt, currentUpdate, options, isReplace) {
   const updates = currentUpdate;
   let _updates = updates;
-  const overwrite = get(options, 'overwrite', false);
   const timestamps = get(options, 'timestamps', true);
 
   // Support skipping timestamps at the query level, see gh-6980
@@ -26,7 +25,7 @@ function applyTimestampsToUpdate(now, createdAt, updatedAt, currentUpdate, optio
   const skipCreatedAt = timestamps != null && timestamps.createdAt === false;
   const skipUpdatedAt = timestamps != null && timestamps.updatedAt === false;
 
-  if (overwrite) {
+  if (isReplace) {
     if (currentUpdate && currentUpdate.$set) {
       currentUpdate = currentUpdate.$set;
       updates.$set = {};
@@ -44,11 +43,12 @@ function applyTimestampsToUpdate(now, createdAt, updatedAt, currentUpdate, optio
 
   if (Array.isArray(updates)) {
     // Update with aggregation pipeline
+    if (updatedAt == null) {
+      return updates;
+    }
     updates.push({ $set: { [updatedAt]: now } });
-
     return updates;
   }
-
   updates.$set = updates.$set || {};
   if (!skipUpdatedAt && updatedAt &&
       (!currentUpdate.$currentDate || !currentUpdate.$currentDate[updatedAt])) {

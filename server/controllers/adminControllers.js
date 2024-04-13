@@ -46,7 +46,7 @@ if(user){
 const authUser = asyncHandler(async (req, res) => {
     const { name, password } = req.body;
     
-        
+      
         try{
             const user = await Admin.findOne({ name: name })
         

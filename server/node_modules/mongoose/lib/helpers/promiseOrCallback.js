@@ -1,9 +1,8 @@
 'use strict';
 
-const PromiseProvider = require('../promise_provider');
 const immediate = require('./immediate');
 
-const emittedSymbol = Symbol('mongoose:emitted');
+const emittedSymbol = Symbol('mongoose#emitted');
 
 module.exports = function promiseOrCallback(callback, fn, ee, Promise) {
   if (typeof callback === 'function') {
@@ -35,7 +34,7 @@ module.exports = function promiseOrCallback(callback, fn, ee, Promise) {
     }
   }
 
-  Promise = Promise || PromiseProvider.get();
+  Promise = Promise || global.Promise;
 
   return new Promise((resolve, reject) => {
     fn(function(error, res) {

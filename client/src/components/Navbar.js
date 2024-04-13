@@ -1,8 +1,11 @@
 import React,{useEffect,useState} from 'react'
 import { Box, Button, Flex, Heading, Spacer, Text,Menu,MenuButton,MenuItem,MenuDivider,MenuList ,Avatar } from "@chakra-ui/react";
+import { Image } from '@chakra-ui/react'
 import { useNavigate } from "react-router-dom";
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import Profile from "../components/Profile/Profile"
+import FullLogo from "../images/FullLogo.png";
+import backgroundImage from '../images/DocImg.jpg'
 import {
     Modal,
     ModalOverlay,

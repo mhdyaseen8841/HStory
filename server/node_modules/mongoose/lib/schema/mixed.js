@@ -4,7 +4,7 @@
 
 'use strict';
 
-const SchemaType = require('../schematype');
+const SchemaType = require('../schemaType');
 const symbols = require('./symbols');
 const isObject = require('../helpers/isObject');
 const utils = require('../utils');
@@ -18,7 +18,7 @@ const utils = require('../utils');
  * @api public
  */
 
-function Mixed(path, options) {
+function SchemaMixed(path, options) {
   if (options && options.default) {
     const def = options.default;
     if (Array.isArray(def) && def.length === 0) {
@@ -43,15 +43,15 @@ function Mixed(path, options) {
  *
  * @api public
  */
-Mixed.schemaName = 'Mixed';
+SchemaMixed.schemaName = 'Mixed';
 
-Mixed.defaultOptions = {};
+SchemaMixed.defaultOptions = {};
 
 /*!
  * Inherits from SchemaType.
  */
-Mixed.prototype = Object.create(SchemaType.prototype);
-Mixed.prototype.constructor = Mixed;
+SchemaMixed.prototype = Object.create(SchemaType.prototype);
+SchemaMixed.prototype.constructor = SchemaMixed;
 
 /**
  * Attaches a getter for all Mixed paths.
@@ -71,7 +71,7 @@ Mixed.prototype.constructor = Mixed;
  * @api public
  */
 
-Mixed.get = SchemaType.get;
+SchemaMixed.get = SchemaType.get;
 
 /**
  * Sets a default option for all Mixed instances.
@@ -92,7 +92,9 @@ Mixed.get = SchemaType.get;
  * @api public
  */
 
-Mixed.set = SchemaType.set;
+SchemaMixed.set = SchemaType.set;
+
+SchemaMixed.setters = [];
 
 /**
  * Casts `val` for Mixed.
@@ -103,7 +105,7 @@ Mixed.set = SchemaType.set;
  * @api private
  */
 
-Mixed.prototype.cast = function(val) {
+SchemaMixed.prototype.cast = function(val) {
   if (val instanceof Error) {
     return utils.errorToPOJO(val);
   }
@@ -118,15 +120,12 @@ Mixed.prototype.cast = function(val) {
  * @api private
  */
 
-Mixed.prototype.castForQuery = function($cond, val) {
-  if (arguments.length === 2) {
-    return val;
-  }
-  return $cond;
+SchemaMixed.prototype.castForQuery = function($cond, val) {
+  return val;
 };
 
 /*!
  * Module exports.
  */
 
-module.exports = Mixed;
+module.exports = SchemaMixed;

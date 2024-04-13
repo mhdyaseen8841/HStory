@@ -10,9 +10,7 @@ router.route('/getPendingReq').get(getpendingDoctors).post(acceptdoctor)
 router.route('/rejectReq').post(rejectReq).get(getRejectedDoctors)
 router.route('/blockDoctor').post(BlockDoctor)
 router.route('/unblockDoctor').post(UnblockDoctor);
-
 router.route('/specialization').get(protect,getspecialization).post(protect,addspecialization)
-
 router.route('/deleteSpecialization').post(deleteSpecialization)
 router.route('/getAllUsers').get(protect,getAllUsers)
 router.route('/getDashboardData').get(getDashboardData)

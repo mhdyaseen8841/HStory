@@ -159,7 +159,7 @@ import {
                   </Heading>
                   <HStack spacing="1" justify="center">
                     <Text color="muted">Don't have an account?</Text>
-                    <Button variant="link" colorScheme="blue">
+                    <Button variant="link" colorScheme="blue" onClick={()=>Navigate('/doctorsignup')}>
                       Sign up
                     </Button>
                   </HStack>
@@ -224,6 +224,10 @@ import {
                   
                     <Button variant="link" colorScheme="blue" size="sm" onClick={()=>Navigate('/doctor/forgetpass')}>
                       Forgot password?
+                    </Button>
+
+                    <Button variant="link" colorScheme="blue" size="sm" onClick={()=>Navigate('/')}>
+                     Back To Home Page
                     </Button>
                   </HStack>
                   <Stack spacing="6">
